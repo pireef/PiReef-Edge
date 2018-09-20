@@ -11,6 +11,8 @@ Current Required Hardware:
     - Required Circuits:
         - EZO PH
         - EZO Temperature
+6. Sainsmart Solid State Relay [Link](https://www.amazon.com/gp/product/B006J4G45G/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
+7. Sainsmart Mechanical Relay [Link](https://www.amazon.com/gp/product/B0057OC5O8/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process
