@@ -1,5 +1,8 @@
 # Introduction 
-The goal of this project is to make a full IOT based aquarium monitor / controller.  
+The goal of this project is to make a full IOT based aquarium monitor / controller.  This project is borrowing ideas or concepts from other similar open-source projects.  The inspiration originally came from [Reef-Pi](https://reef-pi.github.io/) and a lot of the technology inspiration came from [Submerged](https://github.com/jsiegmund/submerged) 
+
+This project is built with Windows IOT Core with a full Azure back-end.  
+
 
 # Getting Started
 Current Required Hardware:
@@ -14,6 +17,12 @@ Current Required Hardware:
 6. Sainsmart Solid State Relay [Link](https://www.amazon.com/gp/product/B006J4G45G/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 7. Sainsmart Mechanical Relay [Link](https://www.amazon.com/gp/product/B0057OC5O8/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 
+# Architecture
+Diagram coming soon.  
+
+# Build and Installation
+Instructions coming soon once the project is a little more developed.  
+
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process
 2.	Software dependencies
@@ -24,9 +33,5 @@ TODO: Guide users through getting your code up and running on their own system. 
 TODO: Describe and show how to build your code and run the tests. 
 
 # Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Looking for others to contribute to this project!  I am by no means a professional and would love the oppurtunity to have some other reef hobbyists and/or programmers help out. Please contact me if you would like to be added to the team!   
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
