@@ -107,6 +107,7 @@
     </AppxManifest>
     <None Include="IOTReef-HubModule_TemporaryKey.pfx" />
     <None Include="Modules\Science\pH_I2C.ino" />
+    <None Include="Modules\Science\Science.ino" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />

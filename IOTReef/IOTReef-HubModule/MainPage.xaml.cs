@@ -84,8 +84,6 @@ namespace IOTReef_HubModule
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 lblMessages.Text = "Last Data Sent to Cloud: " + currentData.TimeRead.ToString();
-                //lblPH.Text = currentData.PH.ToString();
-                //lblTemp.Text = currentData.Temp.ToString();
             });
             }
             catch (Exception ex)
