@@ -106,7 +106,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="IOTReef-HubModule_TemporaryKey.pfx" />
-    <None Include="Modules\Science\Science.ino" />
+    <None Include="Modules\Science\pH_I2C.ino" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />

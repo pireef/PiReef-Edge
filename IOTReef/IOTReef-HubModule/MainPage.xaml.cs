@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Core;
+using Microsoft.Azure.Devices.Client;
+using System.Text;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,12 +33,23 @@ namespace IOTReef_HubModule
         IStream connection;
         RemoteDevice arduino;
         UwpFirmata firmata;
+
         DispatcherTimer getDatatimer;
+        DispatcherTimer sendDataTimer;
+
         ScienceModuleData currentData;
+
+        private DeviceClient client;
+        private string IOTHostName = "IOT-Reef.azure-devices.net";
+        private string IOTDeviceName = "DevelopmentDevice";
+        private string IOTDeviceKey = "GTO6JqpfUNkDSD1JmSM1KYUr4VwwcEU2YJMEifhyFjU=";
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            client = DeviceClient.Create(IOTHostName, new DeviceAuthenticationWithRegistrySymmetricKey(IOTDeviceName, IOTDeviceKey), Microsoft.Azure.Devices.Client.TransportType.Http1);
+
             connection = new UsbSerial("VID_2341", "PID_0043");
             firmata = new UwpFirmata();
             arduino = new RemoteDevice(firmata);
@@ -52,6 +65,36 @@ namespace IOTReef_HubModule
             getDatatimer.Interval = new TimeSpan(0, 0, 5);
             getDatatimer.Tick += getDataTick;
             getDatatimer.Start();
+
+            sendDataTimer = new DispatcherTimer();
+            sendDataTimer.Interval = new TimeSpan(0, 0, 30);
+            sendDataTimer.Tick += sendDataTickAsync;
+            sendDataTimer.Start();
+        }
+
+        private async void sendDataTickAsync(object sender, object e)
+        {
+            try
+            {
+                var serializedData = JsonConvert.SerializeObject(currentData);
+                var bytes = Encoding.UTF8.GetBytes(serializedData);
+                var message = new Message(bytes);
+                await client.SendEventAsync(message);
+
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                lblMessages.Text = "Last Data Sent to Cloud: " + currentData.TimeRead.ToString();
+            });
+            }
+            catch (Exception ex)
+            {
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    lblMessages.Text = "Unhandled Exception: " + ex.ToString();
+                });
+            }
+
+
         }
 
         private void getDataTick(object sender, object e)
