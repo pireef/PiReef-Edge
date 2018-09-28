@@ -30,9 +30,13 @@ namespace IOTReef_HubModule
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        IStream connection;
-        RemoteDevice arduino;
-        UwpFirmata firmata;
+        IStream s_connection;
+        RemoteDevice s_arduino;
+        UwpFirmata s_firmata;
+
+        IStream p_connection;
+        RemoteDevice p_arduino;
+        UwpFirmata p_firmata;
 
         DispatcherTimer getDatatimer;
         DispatcherTimer sendDataTimer;
@@ -44,22 +48,36 @@ namespace IOTReef_HubModule
         private string IOTDeviceName = "DevelopmentDevice";
         private string IOTDeviceKey = "GTO6JqpfUNkDSD1JmSM1KYUr4VwwcEU2YJMEifhyFjU=";
 
+        Dictionary<string, Outlet> outletDict; 
+
         public MainPage()
         {
             this.InitializeComponent();
 
             client = DeviceClient.Create(IOTHostName, new DeviceAuthenticationWithRegistrySymmetricKey(IOTDeviceName, IOTDeviceKey), Microsoft.Azure.Devices.Client.TransportType.Http1);
 
-            connection = new UsbSerial("VID_2341", "PID_0043");
-            firmata = new UwpFirmata();
-            arduino = new RemoteDevice(firmata);
+            s_connection = new UsbSerial("VID_2341", "PID_0043");
+            s_firmata = new UwpFirmata();
+            s_arduino = new RemoteDevice(s_firmata);
 
-            firmata.begin(connection);
-            connection.begin(57600, SerialConfig.SERIAL_8N1);
+            s_firmata.begin(s_connection);
+            s_connection.begin(57600, SerialConfig.SERIAL_8N1);
 
-            arduino.DeviceReady += SienceModuleReady;
-            arduino.DeviceConnectionFailed += ScienceDeviceConnectionFail;
-            arduino.StringMessageReceived += ScienceDataReceived;
+            s_arduino.DeviceReady += SienceModuleReady;
+            s_arduino.DeviceConnectionFailed += ScienceDeviceConnectionFail;
+            s_arduino.StringMessageReceived += ScienceDataReceived;
+
+            p_connection = new UsbSerial("VID_0403", "PID_6001");
+            p_firmata = new UwpFirmata();
+            p_arduino = new RemoteDevice(p_firmata);
+
+            p_firmata.begin(p_connection);
+            p_connection.begin(57600, SerialConfig.SERIAL_8N1);
+
+            p_arduino.DeviceReady += PowerModuleReady;
+            p_arduino.DeviceConnectionFailed += PowerConnectionFail;
+
+            outletDict = new Dictionary<string, Outlet>();
 
             getDatatimer = new DispatcherTimer();
             getDatatimer.Interval = new TimeSpan(0, 0, 5);
@@ -70,6 +88,23 @@ namespace IOTReef_HubModule
             sendDataTimer.Interval = new TimeSpan(0, 0, 30);
             sendDataTimer.Tick += sendDataTickAsync;
             sendDataTimer.Start();
+        }
+
+        private void PowerConnectionFail(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PowerModuleReady()
+        {
+            //p_arduino.pinMode(2, PinMode.OUTPUT);
+            //p_arduino.pinMode(3, PinMode.OUTPUT);
+            //p_arduino.pinMode(4, PinMode.OUTPUT);
+            //p_arduino.pinMode(5, PinMode.OUTPUT);
+
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Ready!"; });
+
+            outletDict.Add("Heater", new Outlet(2, OutletState.OFF, OutletState.OFF, p_arduino));
         }
 
         private async void sendDataTickAsync(object sender, object e)
@@ -100,8 +135,8 @@ namespace IOTReef_HubModule
         private void getDataTick(object sender, object e)
         {
             byte PH_Query = 0x44;
-            firmata.sendSysex(PH_Query, new byte[] { }.AsBuffer());
-            firmata.flush();
+            s_firmata.sendSysex(PH_Query, new byte[] { }.AsBuffer());
+            s_firmata.flush();
         }
 
         private void ScienceDataReceived(string message)
