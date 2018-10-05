@@ -1,0 +1,1 @@
+{"Heater":{"PinNum":2,"State":1,"Fallback":1,"OutletName":"Heater","PlugNumber":1}}

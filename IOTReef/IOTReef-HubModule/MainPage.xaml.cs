@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Core;
 using Microsoft.Azure.Devices.Client;
 using System.Text;
+using Windows.Storage;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -48,7 +49,9 @@ namespace IOTReef_HubModule
         private string IOTDeviceName = "DevelopmentDevice";
         private string IOTDeviceKey = "GTO6JqpfUNkDSD1JmSM1KYUr4VwwcEU2YJMEifhyFjU=";
 
-        Dictionary<string, Outlet> outletDict; 
+        Dictionary<string, Outlet> outletDict; //outlets so we can call them by "name"
+        Dictionary<int, byte> pinNumDict; //physical pin mappings plug number -> pin number this shouldn't change
+        Dictionary<int, string> nameDict; //software plug mappings plug number -> name
 
         public MainPage()
         {
@@ -74,10 +77,8 @@ namespace IOTReef_HubModule
             p_firmata.begin(p_connection);
             p_connection.begin(57600, SerialConfig.SERIAL_8N1);
 
-            p_arduino.DeviceReady += PowerModuleReady;
+            p_arduino.DeviceReady += PowerModuleReadyAsync;
             p_arduino.DeviceConnectionFailed += PowerConnectionFail;
-
-            outletDict = new Dictionary<string, Outlet>();
 
             getDatatimer = new DispatcherTimer();
             getDatatimer.Interval = new TimeSpan(0, 0, 5);
@@ -92,19 +93,58 @@ namespace IOTReef_HubModule
 
         private void PowerConnectionFail(string message)
         {
-            throw new NotImplementedException();
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Connection Failed!"; });
         }
 
-        private void PowerModuleReady()
+        //Ok here's what we're doing. 
+        //1. Try and load the outlet information from the settings file
+        //2. Problem is on a new debug session it's wiping that file.
+        //3. If successful it will load the information on what plugs control what, if not,
+        //we load the default file from the assets folder
+        //4. Call method which basically is an after-thought constructor, sets the arduino, and the current state
+        //that doesn't get called during the DesrializeObject call. (Look into JsonConstructor attibute)
+        private async void PowerModuleReadyAsync()
         {
-            //p_arduino.pinMode(2, PinMode.OUTPUT);
-            //p_arduino.pinMode(3, PinMode.OUTPUT);
-            //p_arduino.pinMode(4, PinMode.OUTPUT);
-            //p_arduino.pinMode(5, PinMode.OUTPUT);
+            pinNumDict = new Dictionary<int, byte>
+            {
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 5 }
+            };
 
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Ready!"; });
+            try
+            {
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFile outletfile = await localFolder.GetFileAsync("dictionarysettings.txt");
+                string outletState = await FileIO.ReadTextAsync(outletfile);
+                outletDict = JsonConvert.DeserializeObject<Dictionary<string, Outlet>>(outletState);
 
-            outletDict.Add("Heater", new Outlet(2, OutletState.OFF, OutletState.OFF, p_arduino));
+                foreach (var plug in outletDict)
+                {
+                    plug.Value.AfterDataConst(p_arduino);
+                }
+            }
+            catch(FileNotFoundException fnfex)
+            {
+                StorageFolder localFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+                StorageFile defaultFile = await localFolder.GetFileAsync("Assets\\OutletDefault.txt");
+                string outletState = await FileIO.ReadTextAsync(defaultFile);
+                outletDict = JsonConvert.DeserializeObject<Dictionary<string, Outlet>>(outletState);
+                foreach(var plug in outletDict)
+                {
+                    plug.Value.AfterDataConst(p_arduino);
+                }
+                string serialized = JsonConvert.SerializeObject(outletDict);
+                localFolder = ApplicationData.Current.LocalFolder;
+                StorageFile file = await localFolder.CreateFileAsync("dictionarysettings.txt", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(file, serialized);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         private async void sendDataTickAsync(object sender, object e)

@@ -16,40 +16,58 @@ namespace IOTReef_HubModule
     public class Outlet
     {
         byte pinNum;
+        string outletName;
+        int plugNumber;
         OutletState state;
         OutletState fallback;
         RemoteDevice arduino;
 
-        public Outlet(RemoteDevice arduino)
+        public Outlet()
         {
-            this.arduino = arduino;
         }
 
-        public Outlet(byte pinNum, OutletState state, OutletState fallback, RemoteDevice arduino)
+        public Outlet(RemoteDevice arduino)
+        {
+            this.Arduino = arduino;
+        }
+
+        public Outlet(byte pinNum, string OutletName, int PlugNumber, OutletState state, OutletState fallback, RemoteDevice arduino)
         {
             this.pinNum = pinNum;
             this.state = state;
             this.fallback = fallback;
-            this.arduino = arduino;
+            this.Arduino = arduino;
+            this.outletName = OutletName;
+            this.plugNumber = PlugNumber;
             arduino.pinMode(pinNum, PinMode.OUTPUT);
+            SetState(state);
+        }
+
+        public void AfterDataConst(RemoteDevice arduino)
+        {
+            this.Arduino = arduino;
+            this.Arduino.pinMode(pinNum, PinMode.OUTPUT);
             SetState(state);
         }
 
         public byte PinNum { get => pinNum; set => pinNum = value; }
         public OutletState State { get => state; }
         public OutletState Fallback { get => fallback; set => fallback = value; }
+        public string OutletName { get => outletName; set => outletName = value; }
+        public int PlugNumber { get => plugNumber; set => plugNumber = value; }
+        public RemoteDevice Arduino { get => arduino; set => arduino = value; }
 
         public void Toggle()
         {
             if (State == OutletState.ON)
             {
-                arduino.digitalWrite(pinNum, PinState.LOW);
+                Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = OutletState.OFF;
                 return;
             }
             if(State == OutletState.OFF)
             {
-                arduino.digitalWrite(pinNum, PinState.HIGH);
+                Arduino.digitalWrite(pinNum, PinState.HIGH);
                 state = OutletState.ON;
                 return;
             }
@@ -59,13 +77,13 @@ namespace IOTReef_HubModule
         {
             if (newState == OutletState.ON)
             {
-                arduino.digitalWrite(pinNum, PinState.HIGH);
+                Arduino.digitalWrite(pinNum, PinState.HIGH);
                 state = newState;
                 return;
             }
             if (newState == OutletState.OFF)
             {
-                arduino.digitalWrite(pinNum, PinState.LOW);
+                Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = newState;
                 return;
             }
