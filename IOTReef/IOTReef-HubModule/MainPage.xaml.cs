@@ -66,9 +66,9 @@ namespace IOTReef_HubModule
             s_firmata.begin(s_connection);
             s_connection.begin(57600, SerialConfig.SERIAL_8N1);
 
-            s_arduino.DeviceReady += SienceModuleReady;
-            s_arduino.DeviceConnectionFailed += ScienceDeviceConnectionFail;
-            s_arduino.StringMessageReceived += ScienceDataReceived;
+            s_arduino.DeviceReady += SienceModuleReadyAsync;
+            s_arduino.DeviceConnectionFailed += ScienceDeviceConnectionFailAsync;
+            s_arduino.StringMessageReceived += ScienceDataReceivedAsync;
 
             p_connection = new UsbSerial("VID_0403", "PID_6001");
             p_firmata = new UwpFirmata();
@@ -78,7 +78,7 @@ namespace IOTReef_HubModule
             p_connection.begin(57600, SerialConfig.SERIAL_8N1);
 
             p_arduino.DeviceReady += PowerModuleReadyAsync;
-            p_arduino.DeviceConnectionFailed += PowerConnectionFail;
+            p_arduino.DeviceConnectionFailed += PowerConnectionFailAsync;
 
             getDatatimer = new DispatcherTimer();
             getDatatimer.Interval = new TimeSpan(0, 0, 5);
@@ -91,9 +91,9 @@ namespace IOTReef_HubModule
             sendDataTimer.Start();
         }
 
-        private void PowerConnectionFail(string message)
+        private async void PowerConnectionFailAsync(string message)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Connection Failed!"; });
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Connection Failed!"; });
         }
 
         //Ok here's what we're doing. 
@@ -110,7 +110,13 @@ namespace IOTReef_HubModule
                 { 1, 2 },
                 { 2, 3 },
                 { 3, 4 },
-                { 4, 5 }
+                { 4, 5 },
+                { 5, 6 },
+                { 6, 7 },
+                { 7, 8 },
+                { 8, 9 },
+                { 9, 10},
+                {10, 11}
             };
 
             try
@@ -156,17 +162,17 @@ namespace IOTReef_HubModule
                 var message = new Message(bytes);
                 await client.SendEventAsync(message);
 
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                lblMessages.Text = "Last Data Sent to Cloud: " + currentData.TimeRead.ToString();
-            });
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+             {
+                 lblMessages.Text = "Last Data Sent to Cloud: " + currentData.TimeRead.ToString();
+             });
             }
             catch (Exception ex)
             {
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    lblMessages.Text = "Unhandled Exception: " + ex.ToString();
-                });
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                 {
+                     lblMessages.Text = "Unhandled Exception: " + ex.ToString();
+                 });
             }
 
 
@@ -179,7 +185,7 @@ namespace IOTReef_HubModule
             s_firmata.flush();
         }
 
-        private void ScienceDataReceived(string message)
+        private async void ScienceDataReceivedAsync(string message)
         {
             ScienceModuleData deserialized = new ScienceModuleData();
 
@@ -191,22 +197,26 @@ namespace IOTReef_HubModule
             deserialized = JsonConvert.DeserializeObject<ScienceModuleData>(message);
             currentData = deserialized;
             currentData.TimeRead = DateTime.Now;
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
-                {
-                    lblMessages.Text = "Last Data Update: " + currentData.TimeRead.ToString();
-                    lblPH.Text = currentData.PH.ToString();
-                    lblTemp.Text = currentData.Temp.ToString();
-                });
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                 {
+                     lblMessages.Text = "Last Data Update: " + currentData.TimeRead.ToString();
+                     lblPH.Text = currentData.PH.ToString();
+                     lblTemp.Text = currentData.Temp.ToString();
+                 });
+            foreach(var outlet in outletDict)
+            {
+                outlet.Value.CheckTriggers(currentData);
+            }
         }
 
-        private void ScienceDeviceConnectionFail(string message)
+        private async void ScienceDeviceConnectionFailAsync(string message)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ()=>{lblMessages.Text = "Science Module Connection Failed!";});
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Science Module Connection Failed!"; });
         }
 
-        private void SienceModuleReady()
+        private async void SienceModuleReadyAsync()
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ()=>{lblMessages.Text = "Science Module Ready!";});
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Science Module Ready!"; });
         }
     }
 }

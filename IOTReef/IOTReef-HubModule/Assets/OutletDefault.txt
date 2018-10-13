@@ -1,1 +1,43 @@
-{"Heater":{"PinNum":2,"State":1,"Fallback":1,"OutletName":"Heater","PlugNumber":1}}
+{  
+   "Heater":{  
+      "PinNum":2,
+      "State":0,
+      "Fallback":1,
+      "OutletName":"Heater",
+      "PlugNumber":1,
+      "OutletTriggers":[  
+         {  
+            "Value":"77.5",
+            "ActionToTake":0,
+            "DataOperator":0,
+            "DataToCheck":0
+         }, 
+         {
+            "Value": "78.0",
+            "ActionToTake":1,
+            "DataOperator":1,
+            "DataToCheck":0
+         }
+      ]
+   },
+   "T5":{  
+      "PinNum":3,
+      "State":0,
+      "Fallback":1,
+      "OutletName":"T5",
+      "PlugNumber":2,
+      "OutletTriggers":[  
+
+      ]
+   },
+   "Halide":{  
+      "PinNum":4,
+      "State":0,
+      "Fallback":1,
+      "OutletName":"Halide",
+      "PlugNumber":3,
+      "OutletTriggers":[  
+
+      ]
+   }
+}
