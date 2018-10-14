@@ -11,13 +11,16 @@
             "ActionToTake":0,
             "DataOperator":0,
             "DataToCheck":0
-         }, 
-         {
-            "Value": "78.0",
+         },
+         {  
+            "Value":"78.0",
             "ActionToTake":1,
             "DataOperator":1,
             "DataToCheck":0
          }
+      ],
+      "OutletSchedules":[  
+
       ]
    },
    "T5":{  
@@ -28,6 +31,18 @@
       "PlugNumber":2,
       "OutletTriggers":[  
 
+      ],
+      "OutletSchedules":[  
+         {  
+            "Hour":11,
+            "Min":30,
+            "NewState":0
+         },
+         {  
+            "Hour":21,
+            "Min":0,
+            "NewState":1
+         }
       ]
    },
    "Halide":{  
@@ -38,6 +53,18 @@
       "PlugNumber":3,
       "OutletTriggers":[  
 
+      ],
+      "OutletSchedules":[  
+         {  
+            "Hour":13,
+            "Min":0,
+            "NewState":0
+         },
+         {  
+            "Hour":19,
+            "Min":30,
+            "NewState":1
+         }
       ]
    }
 }

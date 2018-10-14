@@ -21,6 +21,8 @@ using Windows.ApplicationModel.Core;
 using Microsoft.Azure.Devices.Client;
 using System.Text;
 using Windows.Storage;
+using FluentScheduler;
+using IOTReef_HubModule.Scheduling;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -150,6 +152,7 @@ namespace IOTReef_HubModule
             {
 
             }
+            JobManager.Initialize(new FluentRegistry(outletDict));
 
         }
 

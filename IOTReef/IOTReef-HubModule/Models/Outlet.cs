@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IOTReef_HubModule
+namespace IOTReef_HubModule.Models
 {
     public enum OutletState
     {
@@ -23,26 +23,26 @@ namespace IOTReef_HubModule
         OutletState state;
         OutletState fallback;
         RemoteDevice arduino;
-        float tempLowTrigger;
-        float tempHighTrigger;
-        //float phLowTrigger;
-        //float phHighTrigger;
         List<Trigger> outletTriggers;
+        List<Schedule> outletSchedules;
 
         public Outlet()
         {
             this.OutletTriggers = new List<Trigger>();
+            this.OutletSchedules = new List<Schedule>();
         }
 
         public Outlet(RemoteDevice arduino)
         {
             this.Arduino = arduino;
             this.OutletTriggers = new List<Trigger>();
+            this.OutletSchedules = new List<Schedule>();
         }
 
         public Outlet(byte pinNum, string OutletName, int PlugNumber, OutletState state, OutletState fallback, RemoteDevice arduino)
         {
             this.OutletTriggers = new List<Trigger>();
+            this.OutletSchedules = new List<Schedule>();
             this.pinNum = pinNum;
             this.state = state;
             this.fallback = fallback;
@@ -68,6 +68,7 @@ namespace IOTReef_HubModule
         [JsonIgnore]
         public RemoteDevice Arduino { get => arduino; set => arduino = value; }
         public List<Trigger> OutletTriggers { get => outletTriggers; set => outletTriggers = value; }
+        public List<Schedule> OutletSchedules { get => outletSchedules; set => outletSchedules = value; }
 
         public void Toggle()
         {
@@ -85,7 +86,7 @@ namespace IOTReef_HubModule
             }
         }
 
-        private void SetState(OutletState newState)
+        public void SetState(OutletState newState)
         {
             if (newState == OutletState.ON)
             {
