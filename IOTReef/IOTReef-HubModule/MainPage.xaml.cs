@@ -153,6 +153,10 @@ namespace IOTReef_HubModule
 
             }
             JobManager.Initialize(new FluentRegistry(outletDict));
+            foreach(var plug in outletDict)
+            {
+                plug.Value.PowerUpRecovery();
+            }
 
         }
 

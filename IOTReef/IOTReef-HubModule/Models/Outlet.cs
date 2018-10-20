@@ -156,5 +156,47 @@ namespace IOTReef_HubModule.Models
 
             }
         }
+
+        public void PowerUpRecovery()
+        {
+            TimeSpan start;
+            TimeSpan end;
+
+            foreach(var sched in OutletSchedules)
+            {
+                if(sched.NewState == OutletState.ON)
+                {
+                    start = new TimeSpan(sched.Hour, sched.Min, 0);   
+                }
+                else if(sched.NewState == OutletState.OFF)
+                {
+                    end = new TimeSpan(sched.Hour, sched.Min, 0);
+                }
+            }
+
+            if (start != new TimeSpan() && end != new TimeSpan())
+            {
+                if (CheckTime(DateTime.Now, start, end))
+                {
+                    //the current time is during the time the outlet should be on, so turn it on
+                    SetState(OutletState.ON);
+                }
+                else
+                {
+                    //the current time is during the time the outlet should be off, so turn it off
+                    SetState(OutletState.OFF);
+                }
+            }
+        }
+
+        private bool CheckTime(DateTime now, TimeSpan start, TimeSpan end)
+        {
+            TimeSpan current = now.TimeOfDay;
+
+            if (start < end)
+                return start <= current && current <= end;
+
+            return !(end < current && current < start);
+        }
     }
 }
