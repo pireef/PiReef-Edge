@@ -9,13 +9,13 @@
          {  
             "Value":"77.5",
             "ActionToTake":0,
-            "DataOperator":0,
+            "DataOperator":1,
             "DataToCheck":0
          },
          {  
             "Value":"78.0",
             "ActionToTake":1,
-            "DataOperator":1,
+            "DataOperator":0,
             "DataToCheck":0
          }
       ],

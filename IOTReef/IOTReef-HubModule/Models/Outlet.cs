@@ -74,13 +74,13 @@ namespace IOTReef_HubModule.Models
         {
             if (State == OutletState.ON)
             {
-                Arduino.digitalWrite(pinNum, PinState.LOW);
+                Arduino.digitalWrite(pinNum, PinState.HIGH);
                 state = OutletState.OFF;
                 return;
             }
             if(State == OutletState.OFF)
             {
-                Arduino.digitalWrite(pinNum, PinState.HIGH);
+                Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = OutletState.ON;
                 return;
             }
@@ -90,13 +90,13 @@ namespace IOTReef_HubModule.Models
         {
             if (newState == OutletState.ON)
             {
-                Arduino.digitalWrite(pinNum, PinState.HIGH);
+                Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = newState;
                 return;
             }
             if (newState == OutletState.OFF)
             {
-                Arduino.digitalWrite(pinNum, PinState.LOW);
+                Arduino.digitalWrite(pinNum, PinState.HIGH);
                 state = newState;
                 return;
             }
