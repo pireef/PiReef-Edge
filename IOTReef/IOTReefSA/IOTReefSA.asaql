@@ -1,0 +1,6 @@
+﻿SELECT
+    *
+INTO
+    [IOTReefOutput]
+FROM
+    [IOTReefInput]

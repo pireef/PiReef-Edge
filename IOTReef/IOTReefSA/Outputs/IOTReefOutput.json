@@ -1,0 +1,33 @@
+﻿{
+  "EventHubProperties": null,
+  "BlobStorageProperties": {
+    "Container": "iotreefdata",
+    "DateFormat": "yyyy/MM/dd",
+    "PathPattern": "devicetelementry/{date}",
+    "StorageAccounts": [
+      {
+        "AccountKey": null,
+        "AccountName": "iotreefdata"
+      }
+    ],
+    "TimeFormat": "HH"
+  },
+  "SQLDatabaseProperties": null,
+  "TableStorageProperties": null,
+  "ServiceBusQueueProperties": null,
+  "ServiceBusTopicProperties": null,
+  "DocumentDbProperties": null,
+  "PowellBIProperties": null,
+  "AzureDataLakeStoreProperties": null,
+  "AzureFunctionProperties": null,
+  "DataSourceCredentialDomain": "a1bb7983-7541-4b5a-bedc-714cbf4490d1.StreamAnalyticsCredential",
+  "Name": "IOTReefOutput",
+  "DataSourceType": "Blob Storage",
+  "Serialization": {
+    "Encoding": "UTF8",
+    "Type": "Json",
+    "FieldDelimiter": null,
+    "Format": "LineSeparated"
+  },
+  "ScriptType": "Output"
+}

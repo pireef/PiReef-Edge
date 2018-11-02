@@ -1,0 +1,25 @@
+﻿{
+  "CompresssionType": "None",
+  "Sample": null,
+  "EventHubProperties": null,
+  "BlobStorageProperties": null,
+  "IoTHubProperties": {
+    "ConsumerGroupName": "$Default",
+    "IotHubNamespace": "IOT-Reef",
+    "SharedAccessPolicyKey": null,
+    "SharedAccessPolicyName": "iothubowner",
+    "EndPoint": "messages/events"
+  },
+  "BlobReferenceProperties": null,
+  "DataSourceCredentialDomain": "783c332e-c1b8-41f3-a8fe-a16c2011f861.StreamAnalyticsCredential",
+  "Name": "IOTReefInput",
+  "Type": "Data Stream",
+  "DataSourceType": "IoT Hub",
+  "Serialization": {
+    "Encoding": "UTF8",
+    "Type": "Json",
+    "FieldDelimiter": null,
+    "Format": null
+  },
+  "ScriptType": "Input"
+}
