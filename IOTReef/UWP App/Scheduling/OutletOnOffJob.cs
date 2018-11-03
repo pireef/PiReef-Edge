@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentScheduler;
-using IOTReef_HubModule.Models;
+using UWP_App.Models;
 using Microsoft.Maker.RemoteWiring;
 
-namespace IOTReef_HubModule.Scheduling
+namespace UWP_App.Scheduling
 {
     public class OutletOnOffJob : IJob
     {

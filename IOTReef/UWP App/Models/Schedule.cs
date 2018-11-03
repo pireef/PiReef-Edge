@@ -1,11 +1,11 @@
-﻿using IOTReef_HubModule.Models;
+﻿using UWP_App.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IOTReef_HubModule.Models
+namespace UWP_App.Models
 {
     public class Schedule
     {

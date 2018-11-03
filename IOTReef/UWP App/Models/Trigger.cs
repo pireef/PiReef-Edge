@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IOTReef_HubModule.Models
+namespace UWP_App.Models
 {
     public enum Actions
     {
