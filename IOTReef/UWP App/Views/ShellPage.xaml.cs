@@ -173,7 +173,7 @@ namespace UWP_App.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private async void PowerConnectionFailAsync(string message)
+        private void PowerConnectionFailAsync(string message)
         {
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Power Module Connection Failed!"; });
         }
@@ -274,7 +274,7 @@ namespace UWP_App.Views
             s_firmata.flush();
         }
 
-        private async void ScienceDataReceivedAsync(string message)
+        private void ScienceDataReceivedAsync(string message)
         {
             ScienceModuleData deserialized = new ScienceModuleData();
 
@@ -298,12 +298,12 @@ namespace UWP_App.Views
             }
         }
 
-        private async void ScienceDeviceConnectionFailAsync(string message)
+        private void ScienceDeviceConnectionFailAsync(string message)
         {
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Science Module Connection Failed!"; });
         }
 
-        private async void SienceModuleReadyAsync()
+        private void SienceModuleReadyAsync()
         {
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { lblMessages.Text = "Science Module Ready!"; });
         }
