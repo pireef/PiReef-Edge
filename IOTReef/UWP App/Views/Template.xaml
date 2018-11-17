@@ -9,13 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Image Width="50" Height="50" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Source="ms-appx:///Assets/Temp-Icon.png"/>
-            <TextBlock FontSize="22" Text="Title"/>
-        </StackPanel>
-        <StackPanel Margin="0,0,0,0">
-            <TextBlock Margin="10,0,0,0" FontSize="48" Text="99.9"/>
-            <TextBlock Margin="10,0,0,0" FontSize="8" Text="11/01/2018 8:18PM"/>
+        <StackPanel Orientation="Vertical">
+            <TextBlock FontSize="12" Margin="15,0,0,0" Text="Name"/>
+            <Image Width="50" Height="50" Margin="5,0,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Source="ms-appx:///Assets/Outlet-Icon-On.png"/>
         </StackPanel>
     </StackPanel>
 </Page>

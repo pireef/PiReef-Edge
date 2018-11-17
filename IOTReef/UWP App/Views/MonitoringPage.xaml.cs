@@ -12,13 +12,15 @@ namespace UWP_App.Views
     public sealed partial class MonitoringPage : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Measurement> measurements;
-        //private List<Measurement> measurements;
+        private ObservableCollection<OutletVM> outlets;
+
         private DispatcherTimer dataUpdateTimer;
 
         public MonitoringPage()
         {
             InitializeComponent();
-            measurements = UpdateList();
+            measurements = UpdateMeasurements();
+            outlets = UpdateOutlets();
 
             dataUpdateTimer = new DispatcherTimer();
             dataUpdateTimer.Interval = new TimeSpan(0, 0, 10);
@@ -29,10 +31,10 @@ namespace UWP_App.Views
 
         private void DataUpdateTimer_Tick(object sender, object e)
         {
-            measurements = UpdateList();
-            //Both of those work, but that's stupid...
+            measurements = UpdateMeasurements();
+            outlets = UpdateOutlets();
+            //This works, but it's a little stupid...
             Bindings.Update();
-            //thegrid.ItemsSource = measurements;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,21 +50,38 @@ namespace UWP_App.Views
             OnPropertyChanged(propertyName);
         }
 
-        private ObservableCollection<Measurement> UpdateList()
+        private ObservableCollection<OutletVM> UpdateOutlets()
+        {
+            ObservableCollection<OutletVM> theList = new ObservableCollection<OutletVM>();
+            Dictionary<string, Outlet> wholeDict = ShellPage.outletDict;
+
+            foreach(var kvp in wholeDict)
+            {
+                theList.Add(new OutletVM(kvp.Key, kvp.Value.State));
+            }
+
+            return theList;
+        }
+        private ObservableCollection<Measurement> UpdateMeasurements()
         {
             ObservableCollection<Measurement> theList = new ObservableCollection<Measurement>();
 
-            Measurement temp = new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Temp, "Temperature");
-            Measurement ph = new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.PH, "PH");
-            Measurement sal = new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Salinity, "Salinity");
+            //Measurement temp = new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Temp, "Temperature");
+            //Measurement ph = new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.PH, "PH");
+            //Measurement sal = new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Salinity, "Salinity");
 
-            theList.Add(temp);
-            theList.Add(ph);
-            theList.Add(sal);
+            theList.Add(new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Temp, "Temperature"));
+            theList.Add(new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.PH, "PH"));
+            theList.Add(new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Salinity, "Salinity"));
 
             return theList;
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private void outletGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var plug = (OutletVM)e.ClickedItem;
+        }
     }
 }

@@ -31,6 +31,7 @@ using System.Text;
 using Windows.Storage;
 using FluentScheduler;
 using UWP_App.Scheduling;
+using Windows.UI.Popups;
 
 namespace UWP_App.Views
 {
@@ -56,9 +57,9 @@ namespace UWP_App.Views
         private string IOTDeviceName = "DevelopmentDevice";
         private string IOTDeviceKey = "GTO6JqpfUNkDSD1JmSM1KYUr4VwwcEU2YJMEifhyFjU=";
 
-        Dictionary<string, Outlet> outletDict; //outlets so we can call them by "name"
-        Dictionary<int, byte> pinNumDict; //physical pin mappings plug number -> pin number this shouldn't change
-        Dictionary<int, string> nameDict; //software plug mappings plug number -> name
+        internal static Dictionary<string, Outlet> outletDict; //outlets so we can call them by "name"
+        //Dictionary<int, byte> pinNumDict; //physical pin mappings plug number -> pin number this shouldn't change
+        //Dictionary<int, string> nameDict; //software plug mappings plug number -> name
 
         public NavigationViewItem Selected
         {
@@ -73,6 +74,7 @@ namespace UWP_App.Views
             DataContext = this;
             Initialize();
             currentData = new ScienceModuleData();
+            outletDict = new Dictionary<string, Outlet>();
 
             client = DeviceClient.Create(IOTHostName, new DeviceAuthenticationWithRegistrySymmetricKey(IOTDeviceName, IOTDeviceKey), Microsoft.Azure.Devices.Client.TransportType.Http1);
 
@@ -185,24 +187,11 @@ namespace UWP_App.Views
         //we load the default file from the assets folder
         //4. Call method which basically is an after-thought constructor, sets the arduino, and the current state
         //that doesn't get called during the DesrializeObject call. (Look into JsonConstructor attibute)
+        //5. and Finally, we call the PowerUpRecovery method on the outlet.  This method basically looks at the outlet,
+        //determines if there is a schedule, checks the time, and sets the outlet appropiately.
+
         private async void PowerModuleReadyAsync()
         {
-            pinNumDict = new Dictionary<int, byte>
-            {
-                { 1, 2 },
-                { 2, 3 },
-                { 3, 4 },
-                { 4, 5 },
-                { 5, 6 },
-                { 6, 7 },
-                { 7, 8 },
-                { 8, 9 },
-                { 9, 10},
-                {10, 11},
-                {11, 12},
-                {12, 13}
-            };
-
             try
             {
                 StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -213,6 +202,7 @@ namespace UWP_App.Views
                 foreach (var plug in outletDict)
                 {
                     plug.Value.AfterDataConst(p_arduino);
+                    plug.Value.PowerUpRecovery();
                 }
             }
             catch (FileNotFoundException fnfex)
@@ -224,6 +214,7 @@ namespace UWP_App.Views
                 foreach (var plug in outletDict)
                 {
                     plug.Value.AfterDataConst(p_arduino);
+                    plug.Value.PowerUpRecovery();
                 }
                 string serialized = JsonConvert.SerializeObject(outletDict);
                 localFolder = ApplicationData.Current.LocalFolder;
@@ -232,13 +223,11 @@ namespace UWP_App.Views
             }
             catch (Exception ex)
             {
+                var msg = new MessageDialog("Unknown Error reading settings files: " + ex.ToString());
+                msg.Commands.Add(new UICommand("Close"));
+            }
 
-            }
             JobManager.Initialize(new FluentRegistry(outletDict));
-            foreach (var plug in outletDict)
-            {
-                plug.Value.PowerUpRecovery();
-            }
 
         }
 
@@ -250,18 +239,11 @@ namespace UWP_App.Views
                 var bytes = Encoding.UTF8.GetBytes(serializedData);
                 var message = new Message(bytes);
                 await client.SendEventAsync(message);
-
-                //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                //{
-                //    lblMessages.Text = "Last Data Sent to Cloud: " + currentData.TimeRead.ToString();
-                //});
             }
             catch (Exception ex)
             {
-                //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                //{
-                //    lblMessages.Text = "Unhandled Exception: " + ex.ToString();
-                //});
+                var msg = new MessageDialog("Unknown Error sending data to cloud: " + ex.ToString());
+                msg.Commands.Add(new UICommand("Close"));
             }
 
 
@@ -286,12 +268,7 @@ namespace UWP_App.Views
             deserialized = JsonConvert.DeserializeObject<ScienceModuleData>(message);
             currentData = deserialized;
             currentData.TimeRead = DateTime.Now;
-            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            //{
-            //    lblMessages.Text = "Last Data Update: " + currentData.TimeRead.ToString();
-            //    lblPH.Text = currentData.PH.ToString();
-            //    lblTemp.Text = currentData.Temp.ToString();
-            //});
+
             foreach (var outlet in outletDict)
             {
                 outlet.Value.CheckTriggers(currentData);

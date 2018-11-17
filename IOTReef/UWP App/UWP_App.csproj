@@ -123,6 +123,7 @@
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\Measurement.cs" />
     <Compile Include="Models\Outlet.cs" />
+    <Compile Include="Models\OutletVM.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\ScienceModuleData.cs" />
     <Compile Include="Models\Trigger.cs" />
@@ -210,9 +211,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Assets\IOTSettings.txt" />
+    <Content Include="Assets\Outlet-Icon-Off.png" />
+    <Content Include="Assets\Outlet-Icon-On.png" />
     <Content Include="Assets\OutletDefault.txt" />
     <Content Include="Assets\PH-Icon.png" />
     <Content Include="Assets\Salinity-Icon.png" />
+    <Content Include="Assets\Settings.png" />
     <Content Include="Assets\Temp-Icon.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

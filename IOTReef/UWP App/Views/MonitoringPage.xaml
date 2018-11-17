@@ -12,24 +12,36 @@
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-
-            <GridView x:Name="thegrid" ItemsSource="{x:Bind measurements}">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="data:Measurement">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Width="50" Height="50" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Source="{x:Bind Iconimg}"/>
-                                <TextBlock FontSize="22" Text="{x:Bind Title}"/>
+            <StackPanel>
+                <GridView x:Name="measurementsGrid" ItemsSource="{x:Bind measurements}">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="data:Measurement">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="50" Height="50" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Source="{x:Bind Iconimg}"/>
+                                    <TextBlock FontSize="22" Text="{x:Bind Title}"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,0,0">
+                                    <TextBlock Margin="10,0,0,0" FontSize="48" Text="{x:Bind Value}"/>
+                                    <TextBlock Margin="10,0,0,0" FontSize="8" Text="{x:Bind LastRead}"/>
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel Margin="0,0,0,0">
-                                <TextBlock Margin="10,0,0,0" FontSize="48" Text="{x:Bind Value}"/>
-                                <TextBlock Margin="10,0,0,0" FontSize="8" Text="{x:Bind LastRead}"/>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <GridView x:Name="outletGrid" IsItemClickEnabled="True" ItemClick="outletGrid_ItemClick" ItemsSource="{x:Bind outlets}">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="data:OutletVM">
+                            <StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontSize="12" Margin="15,0,0,0" Text="{x:Bind Name}"/>
+                                    <Image Width="50" Height="50" Margin="5,0,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Source="{x:Bind IconImg}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
 
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->
