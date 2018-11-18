@@ -194,10 +194,7 @@ namespace UWP_App.Views
         {
             try
             {
-                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-                StorageFile outletfile = await localFolder.GetFileAsync("dictionarysettings.txt");
-                string outletState = await FileIO.ReadTextAsync(outletfile);
-                outletDict = JsonConvert.DeserializeObject<Dictionary<string, Outlet>>(outletState);
+                outletDict = await OutletStorage.ReadOutletDictionaryAsync("dictionarysettings.txt");
 
                 foreach (var plug in outletDict)
                 {
@@ -207,19 +204,14 @@ namespace UWP_App.Views
             }
             catch (FileNotFoundException fnfex)
             {
-                StorageFolder localFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-                StorageFile defaultFile = await localFolder.GetFileAsync("Assets\\OutletDefault.txt");
-                string outletState = await FileIO.ReadTextAsync(defaultFile);
-                outletDict = JsonConvert.DeserializeObject<Dictionary<string, Outlet>>(outletState);
+                outletDict = await OutletStorage.ReadDefaultOutletDictionaryAsync();
                 foreach (var plug in outletDict)
                 {
                     plug.Value.AfterDataConst(p_arduino);
                     plug.Value.PowerUpRecovery();
                 }
-                string serialized = JsonConvert.SerializeObject(outletDict);
-                localFolder = ApplicationData.Current.LocalFolder;
-                StorageFile file = await localFolder.CreateFileAsync("dictionarysettings.txt", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(file, serialized);
+                await OutletStorage.SaveOutletDictionaryAsync(outletDict, "dictionarysettings.txt");
+
             }
             catch (Exception ex)
             {

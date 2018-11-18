@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UWP_App.Helpers;
 using UWP_App.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,6 +25,7 @@ namespace UWP_App.Views
     public sealed partial class OutletInformation : Page
     {
         private Outlet selectedOutlet;
+        private bool bChanges = false;
 
         public OutletInformation()
         {
@@ -75,6 +77,10 @@ namespace UWP_App.Views
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             currentState.Toggled -= currentState_Toggled;
+            if(bChanges)
+            {
+                OutletStorage.SaveOutletDictionaryAsync(ShellPage.outletDict, "dictionarysettings.txt");
+            }
             base.OnNavigatedFrom(e);
         }
         private void currentState_Toggled(object sender, RoutedEventArgs e)
@@ -89,14 +95,59 @@ namespace UWP_App.Views
 
         private void btnAddTrigger_Click(object sender, RoutedEventArgs e)
         {
+            bChanges = true;
+
+            Trigger newTrigger = new Trigger();
+
+            if(cboData.SelectedIndex == 0)
+            {
+                newTrigger.DataToCheck = TriggerData.TEMPERATURE;
+            }
+            else if (cboData.SelectedIndex == 1)
+            {
+                newTrigger.DataToCheck = TriggerData.PH;
+            }
+
+            if(cboOperator.SelectedIndex == 0)
+            {
+                newTrigger.DataOperator = TriggerOperator.GREATERTHAN;
+            }
+            else if (cboOperator.SelectedIndex == 1)
+            {
+                newTrigger.DataOperator = TriggerOperator.LESSTHAN;
+            }
+
+            newTrigger.Value = txtValue.Text;
+
+            if(cboAction.SelectedIndex == 0)
+            {
+                newTrigger.ActionToTake = Actions.OUTLETON;
+            }
+            else if(cboAction.SelectedIndex == 1)
+            {
+                newTrigger.ActionToTake = Actions.OUTLETOFF;
+            }
+
+            selectedOutlet.OutletTriggers.Add(newTrigger);
+            ClearControls();
 
         }
 
         private void btnClearTrigger_Click(object sender, RoutedEventArgs e)
         {
-
+            ClearControls();
         }
 
+        private void ClearControls()
+        {
+            cboData.SelectedIndex = -1;
+            cboOperator.SelectedIndex = -1;
+            txtValue.Text = "";
+            cboAction.SelectedIndex = -1;
+            cboSchAction.SelectedIndex = -1;
+            txtHour.Text = "";
+            txtMin.Text = "";
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
@@ -104,12 +155,38 @@ namespace UWP_App.Views
 
         private void btnNewSchedule_Click(object sender, RoutedEventArgs e)
         {
+            Schedule newSched = new Schedule();
+            int hour;
+            int min;
 
+            if (Int32.TryParse(txtHour.Text, out hour) & (Int32.TryParse(txtMin.Text, out min)))
+            {
+                newSched.Hour = hour;
+                newSched.Min = min;
+            }
+            else
+            {//not an integer
+                return;
+            }
+
+            if (cboSchAction.SelectedIndex == 0)
+            {
+                newSched.NewState = OutletState.ON;
+            }
+            else if(cboSchAction.SelectedIndex == 1)
+            {
+                newSched.NewState = OutletState.OFF;
+            }
+
+            selectedOutlet.OutletSchedules.Add(newSched);
+            bChanges = true;
+            ClearControls();
+            
         }
 
         private void btnClearSchedule_Click(object sender, RoutedEventArgs e)
         {
-
+            ClearControls();
         }
     }
 }

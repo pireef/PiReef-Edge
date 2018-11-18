@@ -13,6 +13,11 @@ namespace UWP_App.Models
         private int _min;
         private OutletState _newState;
 
+        public Schedule()
+        {
+
+        }
+
         public Schedule(int hour, int min, OutletState newState)
         {
             Hour = hour;

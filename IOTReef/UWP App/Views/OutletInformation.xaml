@@ -55,7 +55,7 @@
                     <TextBlock Margin="5,0,0,0">This Value</TextBlock>
                     <TextBox Name="txtValue"/>
                     <TextBlock Margin="5,0,0,0">Do this</TextBlock>
-                    <ComboBox>
+                    <ComboBox Name="cboAction" Margin="5,0,0,0">
                         <ComboBoxItem>On</ComboBoxItem>
                         <ComboBoxItem>Off</ComboBoxItem>
                     </ComboBox>
@@ -67,7 +67,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock TextDecorations="Underline" Margin="5,0,0,0">Add New:</TextBlock>
                     <TextBlock Margin="5,0,0,0">Turn: </TextBlock>
-                    <ComboBox Margin="5,0,0,0">
+                    <ComboBox Name="cboSchAction" Margin="5,0,0,0">
                         <ComboBoxItem>On</ComboBoxItem>
                         <ComboBoxItem>Off</ComboBoxItem>
                     </ComboBox>
