@@ -82,6 +82,7 @@ namespace UWP_App.Views
         private void outletGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
             var plug = (OutletVM)e.ClickedItem;
+            this.Frame.Navigate(typeof(OutletInformation), plug.Name);
         }
     }
 }
