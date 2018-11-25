@@ -23,6 +23,7 @@ using System.Text;
 using Windows.Storage;
 using FluentScheduler;
 using IOTReef_HubModule.Scheduling;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -53,7 +54,7 @@ namespace IOTReef_HubModule
 
         Dictionary<string, Outlet> outletDict; //outlets so we can call them by "name"
         Dictionary<int, byte> pinNumDict; //physical pin mappings plug number -> pin number this shouldn't change
-        Dictionary<int, string> nameDict; //software plug mappings plug number -> name
+        //Dictionary<int, string> nameDict; //software plug mappings plug number -> name
 
         public MainPage()
         {
@@ -152,7 +153,8 @@ namespace IOTReef_HubModule
             }
             catch (Exception ex)
             {
-
+                var msg = new MessageDialog("Unknown Error reading settings files: " + ex.ToString());
+                msg.Commands.Add(new UICommand("Close"));
             }
             JobManager.Initialize(new FluentRegistry(outletDict));
             foreach(var plug in outletDict)

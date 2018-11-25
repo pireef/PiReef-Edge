@@ -1,0 +1,5 @@
+﻿{
+"IOTHostName":"IOT-Reef.azure-devices.net",
+"IOTDeviceName":"DevelopmentDevice",
+"IOTDeviceKey":"GTO6JqpfUNkDSD1JmSM1KYUr4VwwcEU2YJMEifhyFjU="
+}
