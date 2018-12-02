@@ -76,8 +76,8 @@ namespace UWP_App.Views
 
         private void UpdateUI()
         {
-            lblTemp.Text = ShellPage.currentData.Temp.ToString();
-            lblPH.Text = ShellPage.currentData.PH.ToString();
+            //lblTemp.Text = ShellPage.currentData.Temp.ToString();
+            //lblPH.Text = ShellPage.currentData.PH.ToString();
         }
     }
 }

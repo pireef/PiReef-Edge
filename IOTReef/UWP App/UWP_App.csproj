@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
+    <Compile Include="Helpers\IOTHelper.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\OutletStorage.cs" />
@@ -128,6 +129,9 @@
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\ScienceModuleData.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\Power.cs" />
+    <Compile Include="Modules\Science.cs" />
     <Compile Include="Scheduling\FluentRegistry.cs" />
     <Compile Include="Scheduling\OutletOnOffJob.cs" />
     <Compile Include="Services\ActivationService.cs" />

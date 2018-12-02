@@ -69,10 +69,9 @@ namespace UWP_App.Views
             //Measurement temp = new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Temp, "Temperature");
             //Measurement ph = new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.PH, "PH");
             //Measurement sal = new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Salinity, "Salinity");
-
-            theList.Add(new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Temp, "Temperature"));
-            theList.Add(new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.PH, "PH"));
-            theList.Add(new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.currentData.TimeRead, ShellPage.currentData.Salinity, "Salinity"));
+            theList.Add(new Measurement("ms-appx:///Assets/Temp-Icon.png", ShellPage.sci_mod.CurrentData.TimeRead, ShellPage.sci_mod.CurrentData.Temp, "Temperature"));
+            theList.Add(new Measurement("ms-appx:///Assets/PH-Icon.png", ShellPage.sci_mod.CurrentData.TimeRead, ShellPage.sci_mod.CurrentData.PH, "PH"));
+            theList.Add(new Measurement("ms-appx:///Assets/Salinity-Icon.png", ShellPage.sci_mod.CurrentData.TimeRead, ShellPage.sci_mod.CurrentData.Salinity, "Salinity"));
 
             return theList;
         }
