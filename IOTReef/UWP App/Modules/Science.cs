@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UWP_App.Helpers;
 using UWP_App.Models;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace UWP_App.Modules
@@ -16,9 +18,12 @@ namespace UWP_App.Modules
         private DispatcherTimer dataUpdate;
         private DispatcherTimer dataToCloud;
         private List<ScienceModuleData> DataToSend;
+        private IOTHelper iothelp;
 
         public Science(string vid, string pid, Dictionary<string, Outlet> dict) : base(vid, pid, dict)
         {
+            iothelp = new IOTHelper();
+
             DataToSend = new List<ScienceModuleData>();
 
             Device.StringMessageReceived += Device_StringMessageReceived;
@@ -29,15 +34,27 @@ namespace UWP_App.Modules
             dataUpdate.Start();
 
             dataToCloud = new DispatcherTimer();
-            dataToCloud.Interval = new TimeSpan(0, 0, 60);
-            dataToCloud.Tick += DataToCloud_Tick;
+            dataToCloud.Interval = new TimeSpan(0, 0, 30);
+            dataToCloud.Tick += DataToCloud_TickAsync;
             dataToCloud.Start();
-
         }
 
-        private void DataToCloud_Tick(object sender, object e)
+        private async void DataToCloud_TickAsync(object sender, object e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if(await iothelp.SendData(DataToSend))
+                {
+                    //succesfull send, clear the list
+                    DataToSend.Clear();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //var msg = new MessageDialog("Unknown Error sending data to cloud: " + ex.ToString());
+                //msg.Commands.Add(new UICommand("Close"));
+            }
         }
 
         private void DataUpdate_Tick(object sender, object e)
