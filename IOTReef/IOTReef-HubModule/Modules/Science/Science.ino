@@ -512,7 +512,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
 
   switch (command) {
     case 0x42:
-      Firmata.sendString("Hello from the arduino.");
+      Firmata.sendString("SCIENCE");
       break;    
     case NEPTUNE_DATA:
       Serial.println("Received NEPTUNE_DATA request");
