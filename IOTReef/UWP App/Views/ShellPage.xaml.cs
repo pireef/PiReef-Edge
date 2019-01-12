@@ -60,6 +60,7 @@ namespace UWP_App.Views
             pow_mod = new Power("VID_0403", "PID_6001", outletDict);
 
         }
+
         private async Task LoadDictionary()
         {            
             try
