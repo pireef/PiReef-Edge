@@ -1,0 +1,29 @@
+﻿{
+  "EventHubProperties": null,
+  "BlobStorageProperties": null,
+  "SQLDatabaseProperties": null,
+  "TableStorageProperties": null,
+  "ServiceBusQueueProperties": null,
+  "ServiceBusTopicProperties": null,
+  "DocumentDbProperties": {
+    "AccountId": "iotreefdb",
+    "AccountKey": null,
+    "CollectionNamePattern": "iotreefcoll",
+    "Database": "iotreefdata",
+    "DocumentId": null,
+    "PartitionKey": null
+  },
+  "PowellBIProperties": null,
+  "AzureDataLakeStoreProperties": null,
+  "AzureFunctionProperties": null,
+  "DataSourceCredentialDomain": "06fc6f9b-b020-4ef5-9683-22a3564437f1.StreamAnalyticsCredential",
+  "Name": "CosmoDBOutput",
+  "DataSourceType": "DocumentDB",
+  "Serialization": {
+    "Encoding": "UTF8",
+    "Type": "Json",
+    "FieldDelimiter": null,
+    "Format": "LineSeparated"
+  },
+  "ScriptType": "Output"
+}

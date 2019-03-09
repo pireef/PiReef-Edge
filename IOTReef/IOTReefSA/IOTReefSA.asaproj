@@ -30,6 +30,9 @@
     <Configure Include="Inputs\IOTReefInput.json">
       <SubType>Input</SubType>
     </Configure>
+    <Configure Include="Outputs\CosmoDB Output.json">
+      <SubType>Output</SubType>
+    </Configure>
     <Configure Include="Outputs\IOTReefOutput.json">
       <SubType>Output</SubType>
     </Configure>

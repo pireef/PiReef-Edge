@@ -1,0 +1,2 @@
+﻿SELECT iotreefcoll.Temp, iotreefcoll.PH, iotreefcoll.Salinity, iotreefcoll.ORP, iotreefcoll.TimeRead, iotreefcoll.IoTHub FROM iotreefcoll 
+    WHERE iotreefcoll.IoTHub.ConnectionDeviceId = "DevelopmentDevice"

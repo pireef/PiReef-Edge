@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Queries" />
     <None Include="UWP_App_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

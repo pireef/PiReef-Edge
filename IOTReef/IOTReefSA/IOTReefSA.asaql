@@ -4,3 +4,10 @@ INTO
     [IOTReefOutput]
 FROM
     [IOTReefInput]
+
+select
+    *
+INTO
+    [CosmoDBOutput]
+from
+    [IOTReefInput]
