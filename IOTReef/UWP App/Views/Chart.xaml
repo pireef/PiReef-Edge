@@ -5,10 +5,26 @@
     xmlns:local="using:UWP_App.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerik="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <telerik:RadCartesianChart PaletteName="DefaultLight">
+            <telerik:RadCartesianChart.HorizontalAxis>
+                <telerik:DateTimeCategoricalAxis DateTimeComponent="Hour"/>
+            </telerik:RadCartesianChart.HorizontalAxis>
+            <telerik:RadCartesianChart.VerticalAxis>
+                <telerik:LinearAxis/>
+            </telerik:RadCartesianChart.VerticalAxis>
+            <telerik:LineSeries ItemsSource="{Binding}">
+                <telerik:LineSeries.ValueBinding>
+                    <telerik:PropertyNameDataPointBinding PropertyName="FTemp"/>
+                </telerik:LineSeries.ValueBinding>
+                <telerik:LineSeries.CategoryBinding>
+                    <telerik:PropertyNameDataPointBinding PropertyName="TimeRead"/>
+                </telerik:LineSeries.CategoryBinding>
+            </telerik:LineSeries>
+        </telerik:RadCartesianChart>
     </Grid>
 </Page>

@@ -114,7 +114,7 @@ namespace UWP_App.Models
                     if(trig.DataOperator == TriggerOperator.GREATERTHAN)
                     {
                         //checking for high temperature
-                        if (data.Temp > temp)
+                        if (data.FTemp > temp)
                         {
                             //trigger condition exists, now go do the work!
                             TakeTheAction(trig.ActionToTake);                            
@@ -123,7 +123,7 @@ namespace UWP_App.Models
                     else if(trig.DataOperator == TriggerOperator.LESSTHAN)
                     {
                         //checking for low temperature
-                        if(data.Temp < temp)
+                        if(data.FTemp < temp)
                         {
                             //trigger condtion exists, now go do the work!
                             TakeTheAction(trig.ActionToTake);

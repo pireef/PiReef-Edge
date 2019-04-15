@@ -15,7 +15,7 @@ namespace UWP_App.Models
         private float ph;
         private float salinity;
         private float orp;
-        private bool converttoF;
+        private bool converttoF = true;
 
 
         public float Temp
@@ -28,11 +28,21 @@ namespace UWP_App.Models
             {
                 if (value != temp)
                 {
-                    temp = (value * 9) / 5 + 32;
+                    temp = value;
                     NotifyPropertyChanged("Temp");
                 }
             }
         }
+
+        public float FTemp
+        {
+            get
+            {
+                return (temp * 9) / 5 + 32;
+            }
+        }
+
+
         public bool ReadSuccess { get => readSuccess; set => readSuccess = value; }
         public DateTime TimeRead { get => timeRead; set => timeRead = value; }
         public float PH
