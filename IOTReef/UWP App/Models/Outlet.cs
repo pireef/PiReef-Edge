@@ -170,6 +170,7 @@ namespace UWP_App.Models
             TimeSpan start;
             TimeSpan end;
 
+            //TODO: this assumes only one on, one off per day. 
             foreach(var sched in OutletSchedules)
             {
                 if(sched.NewState == OutletState.ON)
@@ -192,7 +193,11 @@ namespace UWP_App.Models
                     {
                         SetState(OutletState.OFF);
                         DateTime tm = DateTime.Now.AddMinutes(delaytime);
-                        JobManager.AddJob(new OutletOnOffJob(this, OutletState.ON), s => s.ToRunOnceAt(tm));
+                        //need to check to see if the outlet is going to be off when the delay time job runs.
+                        if(CheckTime(tm, start, end))
+                        {
+                            JobManager.AddJob(new OutletOnOffJob(this, OutletState.ON), s => s.ToRunOnceAt(tm));
+                        }                        
                     }
                     else
                     {
