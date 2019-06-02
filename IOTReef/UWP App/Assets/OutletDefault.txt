@@ -5,6 +5,8 @@
       "Fallback":1,
       "OutletName":"Heater",
       "PlugNumber":1,
+	  "DelayStart":false,
+	  "DelayTime":0,
       "OutletTriggers":[  
          {  
             "Value":"77.5",
@@ -29,6 +31,8 @@
       "Fallback":1,
       "OutletName":"T5",
       "PlugNumber":2,
+	  "DelayStart":true,
+	  "DelayTime":10,
       "OutletTriggers":[  
 
       ],
@@ -51,6 +55,8 @@
       "Fallback":1,
       "OutletName":"Halide",
       "PlugNumber":3,
+	  "DelayStart":true,
+	  "DelayTime":20,
       "OutletTriggers":[  
 
       ],
@@ -73,6 +79,8 @@
 		"Fallback":0,
 		"OutletName":"Return",
 		"PlugNumber":4,
+		"DelayStart":false,
+		"DelayTime":0,
 		"OutletTriggers":[],
 		"OutletSchedules":[]
 	},
@@ -82,6 +90,8 @@
 		"Fallback":0,
 		"OutletName":"Skimmer",
 		"PlugNumber":5,
+		"DelayStart":true,
+		"DelayTime":5,
 		"OutletTriggers":[],
 		"OutletSchedules":[]
    },
@@ -91,6 +101,8 @@
 		"Fallback":0,
 		"OutletName":"Fan",
 		"PlugNumer":6,
+		"DelayStart":false,
+		"DelayTime":0,
 		"OutletTriggers":[],
 		"OutletSchedules":[]
    },
@@ -100,6 +112,8 @@
 		"Fallback":0,
 		"OutletName":"Doser",
 		"PlugNumer":7,
+		"DelayStart":false,
+		"DelayTime":5,
 		"OutletTriggers":[],
 		"OutletSchedules":[]
    }, 
@@ -109,6 +123,8 @@
 		"Fallback":1,
 		"OutletName":"Refugium",
 		"PlugNumer":8,
+		"DelayStart":true,
+		"DelayTime":5,
 		"OutletTriggers":[],
 		"OutletSchedules":[
 		{
@@ -129,6 +145,8 @@
 		"Fallback":1,
 		"OutletName":"GAC",
 		"PlugNumer":9,
+		"DelayStart":false,
+		"DelayTime":5,
 		"OutletTriggares":[],
 		"OutletSchedules":[
 		{
