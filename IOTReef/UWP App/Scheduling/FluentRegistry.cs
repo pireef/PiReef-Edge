@@ -19,8 +19,11 @@ namespace UWP_App.Scheduling
                     Schedule(() => new OutletOnOffJob(plug.Value, sched.NewState)).ToRunEvery(1).Days().At(sched.Hour, sched.Min);
                 }
             }
-            //Schedule(() => new OutletOnOffJob(outlet, OutletState.ON)).ToRunEvery(1).Days().At(12, 33);
-            //Schedule(() => new OutletOnOffJob(outlet, OutletState.OFF)).ToRunEvery(1).Days().At(12, 34);
+        }
+
+        public void AddOneTimeJob(Outlet outlet, OutletState newState, DateTime tm)
+        {
+            Schedule(() => new OutletOnOffJob(outlet, newState)).ToRunOnceAt(tm);
         }
     }
 }

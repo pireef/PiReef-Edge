@@ -19,7 +19,10 @@ namespace UWP_App.Modules
         {
             base.Device_DeviceReady();
             AfterDataConst();
-            JobManager.Initialize(new FluentRegistry(OutletDict));
+            var fr = new FluentRegistry(OutletDict);
+            JobManager.Initialize(fr);
+            //JobManager.Initialize(new FluentRegistry(OutletDict));
+            PowerUpRecovery(fr);
         }
 
         private void AfterDataConst()
@@ -27,7 +30,15 @@ namespace UWP_App.Modules
             foreach(var plug in OutletDict)
             {
                 plug.Value.AfterDataConst(Device);
-                plug.Value.PowerUpRecovery();
+                //plug.Value.PowerUpRecovery();
+            }
+        }
+
+        private void PowerUpRecovery(FluentRegistry reg)
+        {
+            foreach(var plug in OutletDict)
+            {
+                plug.Value.PowerUpRecovery(reg);
             }
         }
     }

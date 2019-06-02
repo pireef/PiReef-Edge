@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UWP_App.Scheduling;
+using FluentScheduler;
 
 namespace UWP_App.Models
 {
@@ -22,6 +24,8 @@ namespace UWP_App.Models
         int plugNumber;
         OutletState state;
         OutletState fallback;
+        bool delayedstart;
+        int delaytime;
         RemoteDevice arduino;
         List<Trigger> outletTriggers;
         List<Schedule> outletSchedules;
@@ -39,7 +43,7 @@ namespace UWP_App.Models
             this.OutletSchedules = new List<Schedule>();
         }
 
-        public Outlet(byte pinNum, string OutletName, int PlugNumber, OutletState state, OutletState fallback, RemoteDevice arduino)
+        public Outlet(byte pinNum, string OutletName, int PlugNumber, OutletState state, OutletState fallback, bool DelayedStart, int DelayTime, RemoteDevice arduino)
         {
             this.OutletTriggers = new List<Trigger>();
             this.OutletSchedules = new List<Schedule>();
@@ -49,15 +53,17 @@ namespace UWP_App.Models
             this.Arduino = arduino;
             this.outletName = OutletName;
             this.plugNumber = PlugNumber;
+            this.delayedstart = DelayedStart;
+            this.delaytime = DelayTime;
             arduino.pinMode(pinNum, PinMode.OUTPUT);
-            SetState(state);
+            //SetState(state);
         }
 
         public void AfterDataConst(RemoteDevice arduino)
         {
             this.Arduino = arduino;
             this.Arduino.pinMode(pinNum, PinMode.OUTPUT);
-            SetState(state);
+            //SetState(state);
         }
 
         public byte PinNum { get => pinNum; set => pinNum = value; }
@@ -65,6 +71,8 @@ namespace UWP_App.Models
         public OutletState Fallback { get => fallback; set => fallback = value; }
         public string OutletName { get => outletName; set => outletName = value; }
         public int PlugNumber { get => plugNumber; set => plugNumber = value; }
+        public bool DelayStart { get => delayedstart; set => delayedstart = value; }
+        public int DelayTime { get => delaytime; set => delaytime = value; }
         [JsonIgnore]
         public RemoteDevice Arduino { get => arduino; set => arduino = value; }
         public List<Trigger> OutletTriggers { get => outletTriggers; set => outletTriggers = value; }
@@ -157,7 +165,7 @@ namespace UWP_App.Models
             }
         }
 
-        public void PowerUpRecovery()
+        public void PowerUpRecovery(FluentRegistry registry)
         {
             TimeSpan start;
             TimeSpan end;
@@ -178,8 +186,18 @@ namespace UWP_App.Models
             {
                 if (CheckTime(DateTime.Now, start, end))
                 {
-                    //the current time is during the time the outlet should be on, so turn it on
-                    SetState(OutletState.ON);
+                    //the current time is during the time the outlet should be on, check for delayed start
+                    //and turn it on.  
+                    if (delayedstart)
+                    {
+                        SetState(OutletState.OFF);
+                        DateTime tm = DateTime.Now.AddMinutes(delaytime);
+                        JobManager.AddJob(new OutletOnOffJob(this, OutletState.ON), s => s.ToRunOnceAt(tm));
+                    }
+                    else
+                    {
+                        SetState(OutletState.ON); 
+                    }
                 }
                 else
                 {
@@ -187,6 +205,30 @@ namespace UWP_App.Models
                     SetState(OutletState.OFF);
                 }
             }
+            else
+            {
+                //so if we get here, this plug doesn't have a schedule,
+                //we just need to figure out if it's supposed to be on, if there is a delayed start or not
+                //then schedule the job or set the state,
+                if (state == OutletState.ON)
+                {
+                    if (delayedstart)
+                    {
+                        SetState(OutletState.OFF);
+                        DateTime tm = DateTime.Now.AddMinutes(delaytime);
+                        JobManager.AddJob(new OutletOnOffJob(this, OutletState.ON), s => s.ToRunOnceAt(tm));
+                    }
+                    else
+                    {
+                        SetState(state);
+                    }
+                }
+                else
+                {
+                    SetState(state);
+                }
+            }
+
         }
 
         private bool CheckTime(DateTime now, TimeSpan start, TimeSpan end)
