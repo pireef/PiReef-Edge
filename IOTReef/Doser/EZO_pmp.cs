@@ -13,9 +13,10 @@ namespace Doser
         string commonName;
         string response;
 
-        public EZO_pmp(int PumpAddr)
+        public EZO_pmp(int PumpAddr, string Name)
         {
             address = PumpAddr;
+            commonName = Name;
             var cnSettings = new I2cConnectionSettings(1, address);
             dev = I2cDevice.Create(cnSettings);
             //dev.ConnectionSettings = cnSettings;
@@ -179,7 +180,8 @@ namespace Doser
         }
         public void Dispose()
         {
-            throw new NotImplementedException();
+            dev.Dispose();
+
         }
 
     }
