@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doser", "Doser\Doser.csproj
 EndProject
 Project("{34036844-64E7-43A5-9151-4AD90E180989}") = "EdgeModules", "EdgeModules\EdgeModules.iotedgeproj", "{276345BF-496E-42E3-A9FF-EDC5A4979478}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTelemetry", "ProcessTelemetry\ProcessTelemetry.csproj", "{8B994355-FCD3-48D0-BA6A-9176846CC8CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessTelemetry", "ProcessTelemetry\ProcessTelemetry.csproj", "{8B994355-FCD3-48D0-BA6A-9176846CC8CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoserTelemetry", "DoserTelemetry\DoserTelemetry.csproj", "{69A91BC7-06E1-4DC0-86C9-5487F49F837E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +169,22 @@ Global
 		{8B994355-FCD3-48D0-BA6A-9176846CC8CF}.Release|x64.Build.0 = Release|Any CPU
 		{8B994355-FCD3-48D0-BA6A-9176846CC8CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B994355-FCD3-48D0-BA6A-9176846CC8CF}.Release|x86.Build.0 = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|x64.Build.0 = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Debug|x86.Build.0 = Debug|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|ARM.Build.0 = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|x64.ActiveCfg = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|x64.Build.0 = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|x86.ActiveCfg = Release|Any CPU
+		{69A91BC7-06E1-4DC0-86C9-5487F49F837E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

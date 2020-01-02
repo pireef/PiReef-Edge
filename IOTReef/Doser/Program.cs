@@ -22,11 +22,11 @@ namespace Doser
                 System.Threading.Thread.Sleep(1000);
             }
 #endif
-            Console.WriteLine("Installing Certificate...");
+            Console.WriteLine("{0}     Installing Certificate...", DateTime.Now);
             InstallCACert();
-            Console.WriteLine("Setting up schedule...");
+            Console.WriteLine("{0}     Setting up schedule...", DateTime.Now);
             JobManager.Initialize(new DoserRegistry());
-            Console.WriteLine("Scheduler Set");
+            Console.WriteLine("{0}     Scheduler Set", DateTime.Now);
 
             while (true)
             {

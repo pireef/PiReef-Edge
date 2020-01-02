@@ -79,46 +79,41 @@ namespace ProcessTelemetry
 
             if (!string.IsNullOrEmpty(messageString))
             {
-                await DetermineMessageType(messageString);
-                //this stuff here pipes the message upstream. 
-                //var pipeMessage = new Message(messageBytes);
-                //foreach (var prop in message.Properties)
-                //{
-                //    pipeMessage.Properties.Add(prop.Key, prop.Value);
-                //}
-                //await moduleClient.SendEventAsync("output1", pipeMessage);
-                //Console.WriteLine("Received message sent");
+                var type = DetermineMessageType(messageString);
+                //this stuff here pipes the message to whatever input stream of the other modules that need it. 
+                var pipeMessage = new Message(messageBytes);
+                foreach (var prop in message.Properties)
+                {
+                    pipeMessage.Properties.Add(prop.Key, prop.Value);
+                }
+                await moduleClient.SendEventAsync(type, pipeMessage);
+                Console.WriteLine("Received message sent");
             }
             return MessageResponse.Completed;
         }
 
-        static async Task<MessageResponse> DetermineMessageType(string msg)
+        static String DetermineMessageType(string msg)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             TelemetryBase tbase = JsonConvert.DeserializeObject<TelemetryBase>(msg);
             
             switch(tbase.Type)
             {
                 case TelemetryType.Doser:
                     Console.WriteLine("Doser Telemetry");
-                    await ProcessDoserTelemetry(msg);
-                    break;
+                    //await ProcessDoserTelemetry(msg);
+                    return "doser";
                 case TelemetryType.Sience:
                     Console.WriteLine("Science Telemetry");
-                    await ProcessScienceTelemetry(msg);
-                    break;
+                    //await ProcessScienceTelemetry(msg);
+                    return "science";
                 case TelemetryType.Power:
                     Console.WriteLine("Power Telemetry");
-                    await ProcessPowerTelemetry(msg);
-                    break;
+                    //await ProcessPowerTelemetry(msg);
+                    return "power";
                 default:
                     Console.WriteLine("Unknown Telemetry");
-                    break;
+                    return "unknown";
             }
-            sw.Stop();
-            Console.WriteLine("Operation took {0} millseconds", sw.ElapsedMilliseconds);
-            return MessageResponse.None;
         }
 
         private static Task ProcessPowerTelemetry(string msg)

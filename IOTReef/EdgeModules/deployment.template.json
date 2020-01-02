@@ -76,6 +76,16 @@
             "version": "1.0",
             "status": "running",
             "restartPolicy": "always"
+          },
+          "DoserTelemetry": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../DoserTelemetry>}",
+              "createOptions": {}
+            }
           }
         }
       }
@@ -84,7 +94,9 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
-          "ProcessTelemetryToIoTHub": "FROM /messages/modules/ProcessTelemetry/outputs/* INTO $upstream"
+          "ToProcess": "FROM /messages/* WHERE NOT IS_DEFINED($connectionModuleId) INTO BrokeredEndPoint(\"modules/ProcessTelemetry/inputs/input1\")",
+          "ProcessTelemetryToIoTHub": "FROM /messages/modules/ProcessTelemetry/outputs/doser INTO BrokeredEndPoint(\"/modules/DoserTelemetry/inputs/input1\")",
+          "DoserTelemetryToIoTHub": "FROM /messages/modules/DoserTelemetry/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
