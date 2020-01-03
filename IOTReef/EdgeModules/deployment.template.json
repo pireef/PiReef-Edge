@@ -67,16 +67,6 @@
               "createOptions": {}
             }
           },
-          "postgres": {
-            "settings": {
-              "image": "iotreefimg.azurecr.io/postgres",
-              "createOptions": "{\"Volumes\":{\"/volumes/data\":{}}}"
-            },
-            "type": "docker",
-            "version": "1.0",
-            "status": "running",
-            "restartPolicy": "always"
-          },
           "DoserTelemetry": {
             "version": "1.0.0",
             "type": "docker",

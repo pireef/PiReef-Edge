@@ -9,7 +9,7 @@ namespace IOTReefLib.Telemetry
         float amtdosed;
         string name;
 
-        public DoserTelemetry(TelemetryType type, DateTime dateTime, int deviceid, float amtdosed, string name) : base(type, dateTime, deviceid)
+        public DoserTelemetry(TelemetryType type, DateTime dateTime, string deviceid, float amtdosed, string name) : base(type, dateTime, deviceid)
         {
             Amtdosed = amtdosed;
             Name = name;

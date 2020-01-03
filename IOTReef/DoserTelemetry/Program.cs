@@ -65,7 +65,7 @@ namespace DoserTelemetry
         static async Task<MessageResponse> PipeMessage(Message message, object userContext)
         {
             int counterValue = Interlocked.Increment(ref counter);
-            string cnString = "Host=postgres;Username=postgres;Password=;Database=iotreefdata";
+            string cnString = "Host=postgres1;Username =postgres;Password=;Database=iotreefdata";
             
 
             var moduleClient = userContext as ModuleClient;
@@ -77,11 +77,10 @@ namespace DoserTelemetry
             byte[] messageBytes = message.GetBytes();
             string messageString = Encoding.UTF8.GetString(messageBytes);
             Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
-
             DoserTelemetry doserTelemetry = JsonConvert.DeserializeObject<DoserTelemetry>(messageString);
 
-            var cn = new NpgsqlConnection(cnString);
-            await cn.OpenAsync();
+            var cn = new NpgsqlConnection(cnString);                  
+            await cn.OpenAsync();              
             var txn = cn.BeginTransaction();
 
             if (!string.IsNullOrEmpty(messageString))
@@ -91,10 +90,10 @@ namespace DoserTelemetry
                     if (cn.State == System.Data.ConnectionState.Open)
                     {
                         Console.WriteLine("Saving data to DB");
-                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, deviceid, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);
+                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, device_id, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);                        
                         var gid = Guid.NewGuid();
                         basecmd.Parameters.AddWithValue("id", gid);
-                        basecmd.Parameters.AddWithValue("deviceid", doserTelemetry.Deviceid);
+                        basecmd.Parameters.AddWithValue("deviceid", Guid.Parse(doserTelemetry.Deviceid));
                         basecmd.Parameters.AddWithValue("collectedtime", doserTelemetry.Datetime);
                         await basecmd.ExecuteNonQueryAsync();
 

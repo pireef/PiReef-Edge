@@ -15,9 +15,9 @@ namespace IOTReefLib.Telemetry
     {
         TelemetryType type;
         DateTime datetime;
-        int deviceid;
+        string deviceid;
 
-        public TelemetryBase(TelemetryType type, DateTime dateTime, int deviceid)
+        public TelemetryBase(TelemetryType type, DateTime dateTime, string deviceid)
         {
             Type = type;
             Datetime = dateTime;
@@ -26,6 +26,6 @@ namespace IOTReefLib.Telemetry
 
         public TelemetryType Type { get => type; set => type = value; }
         public DateTime Datetime { get => datetime; set => datetime = value; }
-        public int Deviceid { get => deviceid; set => deviceid = value; }
+        public string Deviceid { get => deviceid; set => deviceid = value; }
     }
 }
