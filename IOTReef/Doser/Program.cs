@@ -2,7 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
 using FluentScheduler;
+using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 
 namespace Doser
 {
@@ -10,6 +15,7 @@ namespace Doser
     {
         static void Main(string[] args)
         {
+            string cnString = "HostName=IOT-ReefEdge.azure-devices.net;DeviceId=doser;SharedAccessKey=hd7HPRJSkfd7ioGd8vyMGLK+aql+exBCt/Y/e4Bt1C4=;GatewayHostName=raspberrypi";
             Console.WriteLine("{0}     Two Part Doser Starting...", DateTime.Now);
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
@@ -22,10 +28,14 @@ namespace Doser
                 System.Threading.Thread.Sleep(1000);
             }
 #endif
+            //should modify the registry to pass a refernce to the device client
+            var _deviceclient = DeviceClient.CreateFromConnectionString(cnString);
+            _deviceclient.SetMethodHandlerAsync("SetDoserSettings", SetDoserSettings, null).Wait();
+
             Console.WriteLine("{0}     Installing Certificate...", DateTime.Now);
             InstallCACert();
             Console.WriteLine("{0}     Setting up schedule...", DateTime.Now);
-            JobManager.Initialize(new DoserRegistry());
+            JobManager.Initialize(new DoserRegistry(_deviceclient));
             Console.WriteLine("{0}     Scheduler Set", DateTime.Now);
 
             while (true)
@@ -33,6 +43,27 @@ namespace Doser
                 //just a loop to let the scheduler do it's thing
                 System.Threading.Thread.Sleep(10000);
             }
+        }
+
+        private static Task<MethodResponse> SetDoserSettings(MethodRequest methodRequest, object userContext)
+        {
+            var payload = Encoding.UTF8.GetString(methodRequest.Data);
+            DosingSettings ds = JsonConvert.DeserializeObject<DosingSettings>(payload);
+
+            if(ds != null)
+            {
+                SettingsHelper.WriteSettings(ds);
+                string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+                Console.WriteLine("Saved new settings.");
+                return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+            }
+            else
+            {
+                string result = "{\"result\":\"Invalid parameter\"}";
+                Console.WriteLine("Did not save settings, likely bad file.");
+                return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 400));
+            }
+            
         }
 
         static void InstallCACert()

@@ -15,12 +15,14 @@ namespace Doser
         private int doser;
         private int numofTimesaDay;
         private string name;
+        private DeviceClient dc;
 
-        public DispenseJob(int doser, int numofTimesaDay, string name)
+        public DispenseJob(int doser, int numofTimesaDay, string name, DeviceClient dc)
         {
             this.doser = doser;
             this.numofTimesaDay = numofTimesaDay;
             this.name = name;
+            this.dc = dc;
         }
 
         public void Execute()
@@ -55,16 +57,16 @@ namespace Doser
             try
             {
                 //need to pack this connection string away
-                string cnString = "HostName=IOT-ReefEdge.azure-devices.net;DeviceId=doser;SharedAccessKey=hd7HPRJSkfd7ioGd8vyMGLK+aql+exBCt/Y/e4Bt1C4=;GatewayHostName=raspberrypi";
+                //string cnString = "HostName=IOT-ReefEdge.azure-devices.net;DeviceId=doser;SharedAccessKey=hd7HPRJSkfd7ioGd8vyMGLK+aql+exBCt/Y/e4Bt1C4=;GatewayHostName=raspberrypi";
                 //need to set a variable somewhere to id the device instead of hardcoding that db id
-                var client = DeviceClient.CreateFromConnectionString(cnString);
+                //var client = DeviceClient.CreateFromConnectionString(cnString);
 
                 //var gid = new Guid("2d3b067e-6411-4b15-b8ba-7254026026f9");
                 DoserTelemetry telem = new DoserTelemetry(TelemetryType.Doser, DateTime.Now, "2d3b067e-6411-4b15-b8ba-7254026026f9", amount, pmp.CommonName);
                 string strtelem = JsonConvert.SerializeObject(telem);
                 var bytes = Encoding.UTF8.GetBytes(strtelem);
                 var msg = new Message(bytes);
-                await client.SendEventAsync(msg);
+                await dc.SendEventAsync(msg);
             }
             catch(Exception ex)
             {

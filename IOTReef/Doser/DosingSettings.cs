@@ -8,8 +8,8 @@ namespace Doser
 {
     class DosingSettings
     {
-        int pmp1Amt;
-        int pmp2Amt;
+        float pmp1Amt;
+        float pmp2Amt;
         int maxRunTime;
         DateTime pmp1LastCalibration;
         DateTime pmp2LastCalibration;
@@ -21,8 +21,8 @@ namespace Doser
             MaxRunTime = maxRunTime;
         }
 
-        public int PMP2Amt { get => pmp2Amt; set => pmp2Amt = value; }
-        public int PMP1Amt { get => pmp1Amt; set => pmp1Amt = value; }
+        public float PMP2Amt { get => pmp2Amt; set => pmp2Amt = value; }
+        public float PMP1Amt { get => pmp1Amt; set => pmp1Amt = value; }
         public int MaxRunTime { get => maxRunTime; set => maxRunTime = value; }
         public DateTime PMP1LastCalibration { get => pmp1LastCalibration; set => pmp1LastCalibration = value; }
         public DateTime PMP2LastCalibration { get => pmp2LastCalibration; set => pmp2LastCalibration = value; }
