@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -31,6 +32,8 @@ namespace Doser
             //should modify the registry to pass a refernce to the device client
             var _deviceclient = DeviceClient.CreateFromConnectionString(cnString);
             _deviceclient.SetMethodHandlerAsync("SetDoserSettings", SetDoserSettings, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("CalibrationDispense", CalibrationDispense, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("SetCalibration", SetCalibration, null).Wait();
 
             Console.WriteLine("{0}     Installing Certificate...", DateTime.Now);
             InstallCACert();
@@ -42,6 +45,71 @@ namespace Doser
             {
                 //just a loop to let the scheduler do it's thing
                 System.Threading.Thread.Sleep(10000);
+            }
+        }
+
+        private static Task<MethodResponse> SetCalibration(MethodRequest methodRequest, object userContext)
+        {
+            var payload = Encoding.UTF8.GetString(methodRequest.Data);
+            Calibrationdata cd = JsonConvert.DeserializeObject<Calibrationdata>(payload);
+            Console.WriteLine("{0}     Setting calibration on pump {1}", DateTime.Now, cd.Pump);
+            EZO_pmp pmp;
+
+            DosingSettings ds = SettingsHelper.ReadSettings();
+
+            switch(cd.Pump)
+            {
+                case 1:
+                    pmp = new EZO_pmp(0x67, "Pump 1");
+                    pmp.SetCalibration(cd.Val.ToString());
+                    ds.PMP1LastCalibration = DateTime.Now;
+                    break;
+                case 2:
+                    pmp = new EZO_pmp(0x66, "Pump 2");
+                    pmp.SetCalibration(cd.Val.ToString());
+                    ds.PMP2LastCalibration = DateTime.Now;
+                    break;
+            }
+            SettingsHelper.WriteSettings(ds);
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+
+        }
+
+        private static Task<MethodResponse> CalibrationDispense(MethodRequest methodRequest, object userContext)
+        {
+            var payload = Encoding.UTF8.GetString(methodRequest.Data);
+            EZO_pmp pmp;
+            Console.WriteLine("{0}     Begin calibration sequence.  Dispensing 10ml on {1}", DateTime.Now, payload);
+
+            if(Int32.TryParse(payload, out int pumpnum))
+            {
+                if (pumpnum == 1 | pumpnum == 2)
+                {
+                    switch(pumpnum)
+                    {
+                        case 1:
+                            pmp = new EZO_pmp(0x67, "Pump 1");
+                            pmp.Calibration();
+                            break;
+                        case 2:
+                            pmp = new EZO_pmp(0x66, "Pump 2");
+                            pmp.Calibration();
+                            break;
+                    }
+                    string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+                    return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+                }
+                else
+                {
+                    string result = "{\"result\":\"Invalid Pump Number " + methodRequest.Name + "\"}";
+                    return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 400));
+                }
+            }
+            else
+            {
+                string result = "{\"result\":\"Not a Valid Number given " + methodRequest.Name + "\"}";
+                return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes("Not a Valid Number"), 400));
             }
         }
 

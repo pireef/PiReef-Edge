@@ -34,11 +34,11 @@ namespace Doser
             
             if (doser == 0x66)
             {
-                amt = settings.PMP1Amt / 48;
+                amt = (float)settings.PMP1Amt / 48;
             }
             else
             {
-                amt = settings.PMP2Amt / 48;
+                amt = (float)settings.PMP2Amt / 48;
             }
             //get the amount to dose per day
             Console.WriteLine("{0}     Executing job on: {1} for {2}ml", DateTime.Now, name, amt);

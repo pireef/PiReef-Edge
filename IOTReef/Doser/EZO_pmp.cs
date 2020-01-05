@@ -181,7 +181,6 @@ namespace Doser
         public void Dispose()
         {
             dev.Dispose();
-
         }
 
     }
