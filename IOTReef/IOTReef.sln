@@ -9,8 +9,6 @@ Project("{E6C563F2-BDC2-4A24-ACBF-01715157DCBB}") = "IOTReefSA", "IOTReefSA\IOTR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWP_App", "UWP App\UWP_App.csproj", "{C0A4567B-93A3-48F6-BC81-9F6C95BCCAD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelemetryGrabber", "TelemetryGrabber\TelemetryGrabber.csproj", "{D6474FDE-E384-4578-A4B9-291D7FDAE35E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTReefLib", "IOTReefLib\IOTReefLib.csproj", "{02704626-06D3-4E0D-B12B-4995F499E498}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doser", "Doser\Doser.csproj", "{8F62319F-6A49-4F74-89F8-DF5DCC950133}"
@@ -19,7 +17,7 @@ Project("{34036844-64E7-43A5-9151-4AD90E180989}") = "EdgeModules", "EdgeModules\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessTelemetry", "ProcessTelemetry\ProcessTelemetry.csproj", "{8B994355-FCD3-48D0-BA6A-9176846CC8CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoserTelemetry", "DoserTelemetry\DoserTelemetry.csproj", "{69A91BC7-06E1-4DC0-86C9-5487F49F837E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoserTelemetry", "DoserTelemetry\DoserTelemetry.csproj", "{69A91BC7-06E1-4DC0-86C9-5487F49F837E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,22 +87,6 @@ Global
 		{C0A4567B-93A3-48F6-BC81-9F6C95BCCAD8}.Release|x86.ActiveCfg = Release|x86
 		{C0A4567B-93A3-48F6-BC81-9F6C95BCCAD8}.Release|x86.Build.0 = Release|x86
 		{C0A4567B-93A3-48F6-BC81-9F6C95BCCAD8}.Release|x86.Deploy.0 = Release|x86
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|ARM.Build.0 = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|x64.Build.0 = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Debug|x86.Build.0 = Debug|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|ARM.ActiveCfg = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|ARM.Build.0 = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|x64.ActiveCfg = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|x64.Build.0 = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|x86.ActiveCfg = Release|Any CPU
-		{D6474FDE-E384-4578-A4B9-291D7FDAE35E}.Release|x86.Build.0 = Release|Any CPU
 		{02704626-06D3-4E0D-B12B-4995F499E498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{02704626-06D3-4E0D-B12B-4995F499E498}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02704626-06D3-4E0D-B12B-4995F499E498}.Debug|ARM.ActiveCfg = Debug|Any CPU

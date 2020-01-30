@@ -176,8 +176,8 @@ namespace Doser
             dev.Read(readbuf);
 
             response = Encoding.ASCII.GetString(readbuf, 0, readbuf.Length);
-
         }
+
         public void Dispose()
         {
             dev.Dispose();
