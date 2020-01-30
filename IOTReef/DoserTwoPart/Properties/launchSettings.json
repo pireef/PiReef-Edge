@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DoserTwoPart": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
