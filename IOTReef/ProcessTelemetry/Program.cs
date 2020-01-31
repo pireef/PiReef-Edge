@@ -95,8 +95,8 @@ namespace ProcessTelemetry
         static String DetermineMessageType(string msg)
         {
             TelemetryBase tbase = JsonConvert.DeserializeObject<TelemetryBase>(msg);
-            
-            switch(tbase.Type)
+
+            switch (tbase.Type)
             {
                 case TelemetryType.Doser:
                     Console.WriteLine("Doser Telemetry");
@@ -114,57 +114,6 @@ namespace ProcessTelemetry
                     Console.WriteLine("Unknown Telemetry");
                     return "unknown";
             }
-        }
-
-        private static Task ProcessPowerTelemetry(string msg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static Task ProcessScienceTelemetry(string msg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static async Task ProcessDoserTelemetry(string msg)
-        {
-            string cnString = "Host=postgres;Username=postgres;Password=;Database=iotreefdata";
-            DoserTelemetry doserTelemetry = JsonConvert.DeserializeObject<DoserTelemetry>(msg);
-            var cn = new NpgsqlConnection(cnString);
-            //NpgsqlTransaction txn;
-
-            try
-            {
-                await cn.OpenAsync();
-                var txn = cn.BeginTransaction();
-                //var txn = await cn.BeginTransactionAsync(); this compiles here but does not build in docker??
-                
-                var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, deviceid, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);
-                var gid = Guid.NewGuid();
-                basecmd.Parameters.AddWithValue("id", gid);
-                basecmd.Parameters.AddWithValue("deviceid", doserTelemetry.Deviceid);
-                basecmd.Parameters.AddWithValue("collectedtime", doserTelemetry.Datetime);
-                await basecmd.ExecuteNonQueryAsync();
-
-                var dosercmd = new NpgsqlCommand("INSERT INTO dosertelemetry (id, dosername, amtdosed) VALUES (@id, @dosername, @amtdosed)", cn, txn);
-                dosercmd.Parameters.AddWithValue("id", gid);
-                dosercmd.Parameters.AddWithValue("dosername", doserTelemetry.Name);
-                dosercmd.Parameters.AddWithValue("amtdosed", doserTelemetry.Amtdosed);
-                await dosercmd.ExecuteNonQueryAsync();
-
-                await txn.CommitAsync();
-                await cn.CloseAsync();
-            }
-            catch(NpgsqlException ex)
-            {
-                //await txn.RollbackAsync();
-                Console.WriteLine(ex.ToString());       
-            }
-            finally
-            {
-                await cn.CloseAsync();
-            }
-            return;
         }
     }
 }
