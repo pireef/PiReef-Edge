@@ -1,4 +1,4 @@
-namespace DoserTelemetry
+namespace ProcessScienceTelemetry
 {
     using System;
     using System.IO;
@@ -10,9 +10,9 @@ namespace DoserTelemetry
     using System.Threading.Tasks;
     using Microsoft.Azure.Devices.Client;
     using Microsoft.Azure.Devices.Client.Transport.Mqtt;
+    using IOTReefLib.Telemetry;
     using Newtonsoft.Json;
     using Npgsql;
-    using IOTReefLib.Telemetry;
 
     class Program
     {
@@ -66,7 +66,6 @@ namespace DoserTelemetry
         {
             int counterValue = Interlocked.Increment(ref counter);
             string cnString = "Host=postgres1;Username =postgres;Password=;Database=iotreefdata";
-            
 
             var moduleClient = userContext as ModuleClient;
             if (moduleClient == null)
@@ -77,48 +76,64 @@ namespace DoserTelemetry
             byte[] messageBytes = message.GetBytes();
             string messageString = Encoding.UTF8.GetString(messageBytes);
             Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
-            DoserTelemetry doserTelemetry = JsonConvert.DeserializeObject<DoserTelemetry>(messageString);
+            ScienceTelemetry sT = JsonConvert.DeserializeObject<ScienceTelemetry>(messageString);
 
-            var cn = new NpgsqlConnection(cnString);                  
-            await cn.OpenAsync();              
+            var cn = new NpgsqlConnection(cnString);
+            await cn.OpenAsync();
             var txn = cn.BeginTransaction();
-
-            if (!string.IsNullOrEmpty(messageString))
+            
+            if(!string.IsNullOrEmpty(messageString))
             {
                 try
-                {
-                    if (cn.State == System.Data.ConnectionState.Open)
+                {           
+            
+                    if(cn.State == System.Data.ConnectionState.Open)
                     {
                         Console.WriteLine("Saving data to DB");
-                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, device_id, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);                        
+                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry(id, device_id, collectedtime) VALUES(@id, @device_id, @collectedtime)", cn, txn);
                         var gid = Guid.NewGuid();
                         basecmd.Parameters.AddWithValue("id", gid);
-                        basecmd.Parameters.AddWithValue("deviceid", Guid.Parse(doserTelemetry.Deviceid));
-                        basecmd.Parameters.AddWithValue("collectedtime", doserTelemetry.Datetime);
+                        basecmd.Parameters.AddWithValue("device_id", Guid.Parse(sT.Deviceid));
+                        basecmd.Parameters.AddWithValue("collectedtime", sT.Datetime);
                         Console.WriteLine("Execute First Query");
-                        await basecmd.ExecuteNonQueryAsync();
+                        try
+                        {
+                            await basecmd.ExecuteNonQueryAsync();
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        
                         Console.WriteLine("Done");
 
-                        var dosercmd = new NpgsqlCommand("INSERT INTO dosertelemetry (id, dosername, amtdosed) VALUES (@id, @dosername, @amtdosed)", cn, txn);
-                        dosercmd.Parameters.AddWithValue("id", gid);
-                        dosercmd.Parameters.AddWithValue("dosername", doserTelemetry.Name);
-                        dosercmd.Parameters.AddWithValue("amtdosed", doserTelemetry.Amtdosed);
+                        var sciencecmd = new NpgsqlCommand("INSERT INTO sciencetelemetry (id, sciencetype, value) VALUES (@id, @sciencetype, @value)", cn, txn);
+                        sciencecmd.Parameters.AddWithValue("id", gid);
+                        int val = (int)sT.DataType;
+                        sciencecmd.Parameters.AddWithValue("sciencetype", val);
+                        sciencecmd.Parameters.AddWithValue("value", sT.Value);
                         Console.WriteLine("Execute Second Query");
-                        await dosercmd.ExecuteNonQueryAsync();
+                        try
+                        {
+                            await sciencecmd.ExecuteNonQueryAsync();
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
                         Console.WriteLine("Done");
 
-                        Console.WriteLine("Comitting Transaction.");
+                        Console.WriteLine("Comitting Transactions.");
                         await txn.CommitAsync();
                     }
                     else
                     {
                         throw new NpgsqlException("Connection is not open!");
                     }
-
                 }
-                catch (NpgsqlException ex)
+                catch(NpgsqlException ex)
                 {
-                    Console.WriteLine("Rollback Transaction");
+                    Console.WriteLine("Rollback Transactions");
                     await txn.RollbackAsync();
                     Console.WriteLine(ex.ToString());
                 }
@@ -126,14 +141,19 @@ namespace DoserTelemetry
                 {
                     await cn.CloseAsync();
                 }
-                //var pipeMessage = new Message(messageBytes);
-                //foreach (var prop in message.Properties)
-                //{
-                //    pipeMessage.Properties.Add(prop.Key, prop.Value);
-                //}
-                //await moduleClient.SendEventAsync("output1", pipeMessage);
-                //Console.WriteLine("Received message sent");
             }
+
+
+            //if (!string.IsNullOrEmpty(messageString))
+            //{
+            //    var pipeMessage = new Message(messageBytes);
+            //    foreach (var prop in message.Properties)
+            //    {
+            //        pipeMessage.Properties.Add(prop.Key, prop.Value);
+            //    }
+            //    await moduleClient.SendEventAsync("output1", pipeMessage);
+            //    Console.WriteLine("Received message sent");
+            //}
             return MessageResponse.Completed;
         }
     }

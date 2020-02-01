@@ -45,7 +45,7 @@ namespace Science
         {
             try
             {            
-                ScienceTelemetry sTem = new ScienceTelemetry(TelemetryType.Sience, DateTime.Now, "device id", amt, ScienceType.PH);
+                ScienceTelemetry sTem = new ScienceTelemetry(TelemetryType.Sience, DateTime.Now, "97765c81-db74-451a-b89d-170ab3464d17", amt, ScienceType.PH);
                 string telem = JsonConvert.SerializeObject(sTem);
                 var bytes = Encoding.UTF8.GetBytes(telem);
                 var msg = new Message(bytes);

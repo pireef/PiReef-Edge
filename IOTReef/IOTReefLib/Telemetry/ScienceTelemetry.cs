@@ -28,6 +28,6 @@ namespace IOTReefLib.Telemetry
         }
 
         public float Value { get => value; set => this.value = value; }
-        internal ScienceType DataType { get => type; set => type = value; }
+        public ScienceType DataType { get => type; set => type = value; }
     }
 }
