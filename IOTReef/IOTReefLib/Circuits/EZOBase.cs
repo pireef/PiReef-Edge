@@ -12,6 +12,7 @@ namespace IOTReefLib.Circuits
         int address;
         I2cDevice device;
         string response;
+        bool disposed = false;
 
         public int Address { get => address; set => address = value; }
         public string Response { get => response; set => response = value; }
@@ -31,10 +32,22 @@ namespace IOTReefLib.Circuits
 
         public void Dispose()
         {
-            device.Dispose();
-            //GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
+        protected virtual void Dispose(bool bDisposing)
+        {
+            if(!this.disposed)
+            {
+                if(bDisposing)
+                {
+                    device.Dispose();
+                }
+                disposed = true;
+            }
+
+        }
         protected void ExecuteCommand(string cmd)
         {
             byte[] conv = Encoding.ASCII.GetBytes(cmd);
@@ -56,7 +69,8 @@ namespace IOTReefLib.Circuits
             }
             catch(IOException ex)
             {
-                Console.WriteLine("Got Exception");
+                //Console.WriteLine("Got Exception");
+                Console.WriteLine(ex.ToString());
                 //Console.WriteLine(ex.ToString());
                 //System.Threading.Thread.Sleep(delay);
                 //device.Read(readbuf);

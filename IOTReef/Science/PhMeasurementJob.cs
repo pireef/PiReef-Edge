@@ -36,7 +36,7 @@ namespace Science
             }
             catch (FormatException ex)
             {
-                Console.Write("Format Exception ocurred, invalid number recieved: " + ph.Response);
+                Console.Write("Format Exception ocurred, invalid number recieved: " + ph.Response + ex.ToString());
             }
             Console.WriteLine("{0}     PH Value Is: {1}", DateTime.Now, ph.Response);
         }
