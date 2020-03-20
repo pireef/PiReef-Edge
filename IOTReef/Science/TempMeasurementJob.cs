@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentScheduler;
-using Microsoft.Azure.Devices.Client;
+﻿using FluentScheduler;
+using IOTReefLib.Circuits;
 using IOTReefLib.Telemetry;
+using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
+using System;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Science
@@ -12,22 +13,22 @@ namespace Science
     class TempMeasurementJob : IJob
     {
         private DeviceClient _dc;
-        //Temp Circuit
+        private EZOrtd tmp;
 
-        public TempMeasurementJob(DeviceClient dc)
+        public TempMeasurementJob(DeviceClient dc, EZOrtd tmp)
         {
             _dc = dc;
+            this.tmp = tmp;
         }
-
-
 
         public void Execute()
         {
-            //just simulating data right now until we get the circuits
-            Random rn = new Random();
-            var temp = rn.NextDouble() * (79.0 - 77.5) + 77.5;
-            Console.WriteLine("{0}     Temperature:{1}", DateTime.Now, temp);
-            var task = SendTelemetry((float)temp);
+            tmp.TakeReading();
+
+            var s = tmp.Response.Substring(1, 6);
+            var f = float.Parse(s, CultureInfo.InvariantCulture.NumberFormat);
+            Console.WriteLine("{0}     Temperature:{1}", DateTime.Now, f);
+            var task = SendTelemetry(f);
             task.Wait();
         }
 
@@ -41,7 +42,7 @@ namespace Science
                 var msg = new Message(bytes);
                 await _dc.SendEventAsync(msg);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }

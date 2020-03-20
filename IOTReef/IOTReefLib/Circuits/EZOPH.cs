@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Globalization;
 
 namespace IOTReefLib.Circuits
 {
@@ -16,11 +14,11 @@ namespace IOTReefLib.Circuits
             //Address = 0x63;
         }
 
-        public void Find()
-        {
-            string command = "Find";
-            ExecuteCommand(command);
-        }
+        //public void Find()
+        //{
+        //    string command = "Find";
+        //    ExecuteCommand(command);
+        //}
 
         public void TakeReading()
         {
@@ -30,15 +28,15 @@ namespace IOTReefLib.Circuits
 
         public void TakeReadingTempComp(float temp)
         {
-            string command = "RT," + temp.ToString();
+            string command = "RT," + temp.ToString(CultureInfo.InvariantCulture);
             ExecuteCommand(command, 900);
         }
 
-        public void Status()
-        {
-            string command = "Status";
-            ExecuteCommand(command, 1500);
-        }
+        //public void Status()
+        //{
+        //    string command = "Status";
+        //    ExecuteCommand(command, 1500);
+        //}
 
         public void CalibrateLow()
         {

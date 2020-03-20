@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Device.I2c;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Doser

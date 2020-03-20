@@ -1,11 +1,7 @@
-﻿using IOTReef_HubModule.Models;
-using Microsoft.Maker.RemoteWiring;
+﻿using Microsoft.Maker.RemoteWiring;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IOTReef_HubModule.Models
 {
@@ -78,7 +74,7 @@ namespace IOTReef_HubModule.Models
                 state = OutletState.OFF;
                 return;
             }
-            if(State == OutletState.OFF)
+            if (State == OutletState.OFF)
             {
                 Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = OutletState.ON;
@@ -111,26 +107,26 @@ namespace IOTReef_HubModule.Models
                 {
                     var temp = float.Parse(trig.Value);
 
-                    if(trig.DataOperator == TriggerOperator.GREATERTHAN)
+                    if (trig.DataOperator == TriggerOperator.GREATERTHAN)
                     {
                         //checking for high temperature
                         if (data.Temp > temp)
                         {
                             //trigger condition exists, now go do the work!
-                            TakeTheAction(trig.ActionToTake);                            
+                            TakeTheAction(trig.ActionToTake);
                         }
                     }
-                    else if(trig.DataOperator == TriggerOperator.LESSTHAN)
+                    else if (trig.DataOperator == TriggerOperator.LESSTHAN)
                     {
                         //checking for low temperature
-                        if(data.Temp < temp)
+                        if (data.Temp < temp)
                         {
                             //trigger condtion exists, now go do the work!
                             TakeTheAction(trig.ActionToTake);
                         }
                     }
                 }
-                else if(trig.DataToCheck == TriggerData.PH)
+                else if (trig.DataToCheck == TriggerData.PH)
                 {
                     var ph = float.Parse(trig.Value);
                 }
@@ -162,13 +158,13 @@ namespace IOTReef_HubModule.Models
             TimeSpan start;
             TimeSpan end;
 
-            foreach(var sched in OutletSchedules)
+            foreach (var sched in OutletSchedules)
             {
-                if(sched.NewState == OutletState.ON)
+                if (sched.NewState == OutletState.ON)
                 {
-                    start = new TimeSpan(sched.Hour, sched.Min, 0);   
+                    start = new TimeSpan(sched.Hour, sched.Min, 0);
                 }
-                else if(sched.NewState == OutletState.OFF)
+                else if (sched.NewState == OutletState.OFF)
                 {
                     end = new TimeSpan(sched.Hour, sched.Min, 0);
                 }

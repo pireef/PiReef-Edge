@@ -1,33 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using FluentScheduler;
+﻿using FluentScheduler;
+using IOTReefLib.Circuits;
 using IOTReefLib.Telemetry;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
+using System;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Science
 {
     class SalinityMeasurementJob : IJob
     {
         DeviceClient _dc;
+        private EZOSal _sal;
 
-        public SalinityMeasurementJob(DeviceClient dc)
+        public SalinityMeasurementJob(DeviceClient dc, EZOSal sal)
         {
             _dc = dc;
+            _sal = sal;
         }
 
         //salinity circuit
 
         public void Execute()
         {
-            //simulated data until we get the circuit
-            Random rn = new Random();
-            var sal = rn.NextDouble() * (35.0 - 34.0) + 34.0;
-            Console.WriteLine("{0}     Salinity:{1}", DateTime.Now, sal);
-            var task = SendTelemetry((float)sal);
-            task.Wait();
+            _sal.TakeReading();
+            try
+            {
+                var s = _sal.Response.Substring(1, 5); //I think this works, will need to verify once I get a probe with real values
+                                                       //"\u00010.000\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+                var f = float.Parse(s, CultureInfo.InvariantCulture.NumberFormat);
+                var task = SendTelemetry(f);
+                task.Wait();
+            }
+            catch (FormatException ex)
+            {
+                Console.Write("Format Exception ocurred, invalid number recieved: " + _sal.Response + ex.ToString());
+            }
+            Console.WriteLine("{0}     Salinity Value Is: {1}", DateTime.Now, _sal.Response);
         }
 
         private async Task SendTelemetry(float amt)

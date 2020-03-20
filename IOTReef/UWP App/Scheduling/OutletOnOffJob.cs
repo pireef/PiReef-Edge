@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentScheduler;
+﻿using FluentScheduler;
 using UWP_App.Models;
-using Microsoft.Maker.RemoteWiring;
 
 namespace UWP_App.Scheduling
 {

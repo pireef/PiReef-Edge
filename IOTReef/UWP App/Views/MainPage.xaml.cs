@@ -1,31 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
-using Windows.UI.Xaml.Controls;
 //using IOTReef_HubModule.Models;
-using Microsoft.Maker.Firmata;
-using Microsoft.Maker.RemoteWiring;
-using Microsoft.Maker.Serial;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.ApplicationModel.Core;
-using Microsoft.Azure.Devices.Client;
-using System.Text;
-using Windows.Storage;
-using FluentScheduler;
-using UWP_App.Scheduling;
+using Windows.UI.Xaml.Controls;
 
 namespace UWP_App.Views
 {

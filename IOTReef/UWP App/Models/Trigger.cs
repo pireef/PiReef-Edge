@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UWP_App.Models
+﻿namespace UWP_App.Models
 {
     public enum Actions
     {
@@ -43,7 +37,7 @@ namespace UWP_App.Models
             string sentence;
 
             sentence = "When ";
-            if(DataToCheck == TriggerData.TEMPERATURE)
+            if (DataToCheck == TriggerData.TEMPERATURE)
             {
                 sentence += "temperature is ";
             }
@@ -52,7 +46,7 @@ namespace UWP_App.Models
                 sentence += "PH is ";
             }
 
-            if(DataOperator == TriggerOperator.GREATERTHAN)
+            if (DataOperator == TriggerOperator.GREATERTHAN)
             {
                 sentence += "greater than ";
             }
@@ -63,11 +57,11 @@ namespace UWP_App.Models
 
             sentence += Value + " ";
 
-            if(ActionToTake == Actions.OUTLETON)
+            if (ActionToTake == Actions.OUTLETON)
             {
                 sentence += "turn on this outlet.";
             }
-            else if(actionToTake == Actions.OUTLETOFF)
+            else if (actionToTake == Actions.OUTLETOFF)
             {
                 sentence += "turn off this outlet.";
             }

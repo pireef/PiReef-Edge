@@ -1,18 +1,14 @@
 namespace ProcessScienceTelemetry
 {
+    using IOTReefLib.Telemetry;
+    using Microsoft.Azure.Devices.Client;
+    using Newtonsoft.Json;
+    using Npgsql;
     using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
     using System.Runtime.Loader;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Devices.Client;
-    using Microsoft.Azure.Devices.Client.Transport.Mqtt;
-    using IOTReefLib.Telemetry;
-    using Newtonsoft.Json;
-    using Npgsql;
 
     class Program
     {
@@ -81,13 +77,13 @@ namespace ProcessScienceTelemetry
             var cn = new NpgsqlConnection(cnString);
             await cn.OpenAsync();
             var txn = cn.BeginTransaction();
-            
-            if(!string.IsNullOrEmpty(messageString))
+
+            if (!string.IsNullOrEmpty(messageString))
             {
                 try
-                {           
-            
-                    if(cn.State == System.Data.ConnectionState.Open)
+                {
+
+                    if (cn.State == System.Data.ConnectionState.Open)
                     {
                         Console.WriteLine("Saving data to DB");
                         var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry(id, device_id, collectedtime) VALUES(@id, @device_id, @collectedtime)", cn, txn);
@@ -100,11 +96,11 @@ namespace ProcessScienceTelemetry
                         {
                             await basecmd.ExecuteNonQueryAsync();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             Console.WriteLine(ex.ToString());
                         }
-                        
+
                         Console.WriteLine("Done");
 
                         var sciencecmd = new NpgsqlCommand("INSERT INTO sciencetelemetry (id, sciencetype, value) VALUES (@id, @sciencetype, @value)", cn, txn);
@@ -117,7 +113,7 @@ namespace ProcessScienceTelemetry
                         {
                             await sciencecmd.ExecuteNonQueryAsync();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             Console.WriteLine(ex.ToString());
                         }
@@ -131,7 +127,7 @@ namespace ProcessScienceTelemetry
                         throw new NpgsqlException("Connection is not open!");
                     }
                 }
-                catch(NpgsqlException ex)
+                catch (NpgsqlException ex)
                 {
                     Console.WriteLine("Rollback Transactions");
                     await txn.RollbackAsync();

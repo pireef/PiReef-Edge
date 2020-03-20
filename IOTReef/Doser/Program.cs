@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FluentScheduler;
+using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using FluentScheduler;
-using Microsoft.Azure.Devices.Client;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
 
 namespace Doser
 {
@@ -57,7 +55,7 @@ namespace Doser
 
             DosingSettings ds = SettingsHelper.ReadSettings();
 
-            switch(cd.Pump)
+            switch (cd.Pump)
             {
                 case 1:
                     pmp = new EZO_pmp(0x67, "Pump 1");
@@ -82,11 +80,11 @@ namespace Doser
             EZO_pmp pmp;
             Console.WriteLine("{0}     Begin calibration sequence.  Dispensing 10ml on {1}", DateTime.Now, payload);
 
-            if(Int32.TryParse(payload, out int pumpnum))
+            if (Int32.TryParse(payload, out int pumpnum))
             {
                 if (pumpnum == 1 | pumpnum == 2)
                 {
-                    switch(pumpnum)
+                    switch (pumpnum)
                     {
                         case 1:
                             pmp = new EZO_pmp(0x67, "Pump 1");
@@ -118,7 +116,7 @@ namespace Doser
             var payload = Encoding.UTF8.GetString(methodRequest.Data);
             DosingSettings ds = JsonConvert.DeserializeObject<DosingSettings>(payload);
 
-            if(ds != null)
+            if (ds != null)
             {
                 SettingsHelper.WriteSettings(ds);
                 string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
@@ -131,14 +129,14 @@ namespace Doser
                 Console.WriteLine("Did not save settings, likely bad file.");
                 return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 400));
             }
-            
+
         }
 
         static void InstallCACert()
         {
             string trustedCACertPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             trustedCACertPath += "/azure-iotreef.root.ca.cert.pem";
-            
+
             if (!string.IsNullOrWhiteSpace(trustedCACertPath))
             {
                 Console.WriteLine("User configured CA certificate path: {0}", trustedCACertPath);

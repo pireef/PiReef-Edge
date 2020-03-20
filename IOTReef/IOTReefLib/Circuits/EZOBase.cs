@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Device.I2c;
-using System.Threading.Tasks;
 using System.IO;
+using System.Text;
 
 namespace IOTReefLib.Circuits
 {
@@ -38,9 +36,9 @@ namespace IOTReefLib.Circuits
 
         protected virtual void Dispose(bool bDisposing)
         {
-            if(!this.disposed)
+            if (!this.disposed)
             {
-                if(bDisposing)
+                if (bDisposing)
                 {
                     device.Dispose();
                 }
@@ -67,7 +65,7 @@ namespace IOTReefLib.Circuits
             {
                 device.Read(readbuf);
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 //Console.WriteLine("Got Exception");
                 Console.WriteLine(ex.ToString());
@@ -77,6 +75,18 @@ namespace IOTReefLib.Circuits
             }
 
             Response = Encoding.ASCII.GetString(readbuf, 0, readbuf.Length);
+        }
+
+        public void Find()
+        {
+            string command = "Find";
+            ExecuteCommand(command);
+        }
+
+        public void Status()
+        {
+            string command = "Status";
+            ExecuteCommand(command);
         }
     }
 }

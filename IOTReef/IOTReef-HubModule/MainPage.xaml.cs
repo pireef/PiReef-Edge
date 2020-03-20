@@ -1,4 +1,7 @@
-﻿using IOTReef_HubModule.Models;
+﻿using FluentScheduler;
+using IOTReef_HubModule.Models;
+using IOTReef_HubModule.Scheduling;
+using Microsoft.Azure.Devices.Client;
 using Microsoft.Maker.Firmata;
 using Microsoft.Maker.RemoteWiring;
 using Microsoft.Maker.Serial;
@@ -6,24 +9,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Text;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.ApplicationModel.Core;
-using Microsoft.Azure.Devices.Client;
-using System.Text;
-using Windows.Storage;
-using FluentScheduler;
-using IOTReef_HubModule.Scheduling;
-using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -136,13 +128,13 @@ namespace IOTReef_HubModule
                     plug.Value.AfterDataConst(p_arduino);
                 }
             }
-            catch(FileNotFoundException fnfex)
+            catch (FileNotFoundException fnfex)
             {
                 StorageFolder localFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
                 StorageFile defaultFile = await localFolder.GetFileAsync("Assets\\OutletDefault.txt");
                 string outletState = await FileIO.ReadTextAsync(defaultFile);
                 outletDict = JsonConvert.DeserializeObject<Dictionary<string, Outlet>>(outletState);
-                foreach(var plug in outletDict)
+                foreach (var plug in outletDict)
                 {
                     plug.Value.AfterDataConst(p_arduino);
                 }
@@ -157,7 +149,7 @@ namespace IOTReef_HubModule
                 msg.Commands.Add(new UICommand("Close"));
             }
             JobManager.Initialize(new FluentRegistry(outletDict));
-            foreach(var plug in outletDict)
+            foreach (var plug in outletDict)
             {
                 plug.Value.PowerUpRecovery();
             }
@@ -200,7 +192,7 @@ namespace IOTReef_HubModule
         {
             ScienceModuleData deserialized = new ScienceModuleData();
 
-            if(currentData == null)
+            if (currentData == null)
             {
                 currentData = new ScienceModuleData();
             }
@@ -214,7 +206,7 @@ namespace IOTReef_HubModule
                      lblPH.Text = currentData.PH.ToString();
                      lblTemp.Text = currentData.Temp.ToString();
                  });
-            foreach(var outlet in outletDict)
+            foreach (var outlet in outletDict)
             {
                 outlet.Value.CheckTriggers(currentData);
             }

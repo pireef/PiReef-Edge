@@ -1,12 +1,8 @@
 ﻿using Microsoft.Maker.Firmata;
 using Microsoft.Maker.RemoteWiring;
 using Microsoft.Maker.Serial;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UWP_App.Helpers;
 using UWP_App.Models;
 
@@ -44,7 +40,7 @@ namespace UWP_App.Modules
 
             Device.DeviceReady += Device_DeviceReady;
             Device.DeviceConnectionFailed += Device_DeviceConnectionFailed;
-            Device.DeviceConnectionLost += Device_DeviceConnectionLost;            
+            Device.DeviceConnectionLost += Device_DeviceConnectionLost;
         }
 
         private async void LoadOutletDictionary()
@@ -53,7 +49,7 @@ namespace UWP_App.Modules
             {
                 OutletDict = await OutletStorage.ReadOutletDictionaryAsync("dictionarysettings.txt");
             }
-            catch(FileNotFoundException fnfex)
+            catch (FileNotFoundException fnfex)
             {
                 OutletDict = await OutletStorage.ReadDefaultOutletDictionaryAsync();
             }

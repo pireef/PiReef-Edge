@@ -1,18 +1,14 @@
 namespace DoserTelemetry
 {
+    using IOTReefLib.Telemetry;
+    using Microsoft.Azure.Devices.Client;
+    using Newtonsoft.Json;
+    using Npgsql;
     using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
     using System.Runtime.Loader;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Devices.Client;
-    using Microsoft.Azure.Devices.Client.Transport.Mqtt;
-    using Newtonsoft.Json;
-    using Npgsql;
-    using IOTReefLib.Telemetry;
 
     class Program
     {
@@ -66,7 +62,7 @@ namespace DoserTelemetry
         {
             int counterValue = Interlocked.Increment(ref counter);
             string cnString = "Host=postgres1;Username =postgres;Password=;Database=iotreefdata";
-            
+
 
             var moduleClient = userContext as ModuleClient;
             if (moduleClient == null)
@@ -79,8 +75,8 @@ namespace DoserTelemetry
             Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
             DoserTelemetry doserTelemetry = JsonConvert.DeserializeObject<DoserTelemetry>(messageString);
 
-            var cn = new NpgsqlConnection(cnString);                  
-            await cn.OpenAsync();              
+            var cn = new NpgsqlConnection(cnString);
+            await cn.OpenAsync();
             var txn = cn.BeginTransaction();
 
             if (!string.IsNullOrEmpty(messageString))
@@ -90,7 +86,7 @@ namespace DoserTelemetry
                     if (cn.State == System.Data.ConnectionState.Open)
                     {
                         Console.WriteLine("Saving data to DB");
-                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, device_id, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);                        
+                        var basecmd = new NpgsqlCommand("INSERT INTO devicetelemetry (id, device_id, collectedtime) VALUES (@id, @deviceid, @collectedtime)", cn, txn);
                         var gid = Guid.NewGuid();
                         basecmd.Parameters.AddWithValue("id", gid);
                         basecmd.Parameters.AddWithValue("deviceid", Guid.Parse(doserTelemetry.Deviceid));

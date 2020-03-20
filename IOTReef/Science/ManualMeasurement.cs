@@ -1,7 +1,4 @@
 ﻿using IOTReefLib.Telemetry;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Science
 {

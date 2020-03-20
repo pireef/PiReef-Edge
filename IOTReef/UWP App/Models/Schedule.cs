@@ -1,11 +1,4 @@
-﻿using UWP_App.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UWP_App.Models
+﻿namespace UWP_App.Models
 {
     public class Schedule
     {
@@ -35,7 +28,7 @@ namespace UWP_App.Models
 
             msg = "I turn ";
 
-            if(NewState == OutletState.ON)
+            if (NewState == OutletState.ON)
             {
                 msg += "ON at ";
             }

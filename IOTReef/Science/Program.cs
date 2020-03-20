@@ -1,20 +1,24 @@
-﻿using System;
+﻿using FluentScheduler;
+using IOTReefLib.Circuits;
+using IOTReefLib.Telemetry;
+using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using IOTReefLib.Circuits;
-using Microsoft.Azure.Devices.Client;
-using FluentScheduler;
-using System.Threading.Tasks;
 using System.Text;
-using Newtonsoft.Json;
-using IOTReefLib.Telemetry;
+using System.Threading.Tasks;
 
 namespace Science
 {
     class Program
     {
         static DeviceClient _deviceclient;
+        static EZOPH ph;
+        static EZOrtd tmp;
+        static EZOSal sal;
+
         static void Main(string[] args)
         {
             string cnString = "HostName=IOT-ReefEdge.azure-devices.net;DeviceId=science;SharedAccessKey=xV+L6SUkiwhwH9N7j5Jly85gbeXFPW5dffWIRwGmPyE=;GatewayHostName=raspberrypi";
@@ -32,21 +36,87 @@ namespace Science
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
             _deviceclient = DeviceClient.CreateFromConnectionString(cnString);
-            var ph = new EZOPH();
+            ph = new EZOPH();
+            tmp = new EZOrtd();
+            sal = new EZOSal();
+            //sal.FactoryReset();
+            //System.Threading.Thread.Sleep(5000);
+            //sal.OutputEC(true);
+            //System.Threading.Thread.Sleep(500);
+            //sal.OutputSal(true);
+            //System.Threading.Thread.Sleep(500);
+            //sal.OutputSG(true);
+            //System.Threading.Thread.Sleep(500);
+            //sal.OutputTDS(true);
+            //System.Threading.Thread.Sleep(500);
+
             //set the direct method handlers here
             _deviceclient.SetMethodHandlerAsync("IntakeManualMeasurement", IntakeManualMeasurement, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_PH_Mid", Cal_PH_Mid, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_PH_High", Cal_PH_High, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_Sal_Dry", Cal_Sal_Dry, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_Sal_Low", Cal_Sal_Low, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_Sal_High", Cal_Sal_High, null).Wait();
+            _deviceclient.SetMethodHandlerAsync("Cal_Sal_Clear", Cal_Sal_Clear, null).Wait();
 
             Console.WriteLine("{0}     Installing Certificate...", DateTime.Now);
             InstallCACert();
 
             Console.WriteLine("{0}     Setting Schedule...", DateTime.Now);
-
-            JobManager.Initialize(new ScienceRegistry(_deviceclient, ph));
+            JobManager.Initialize(new ScienceRegistry(_deviceclient, ph, tmp, sal));
 
             while (true)
             {
                 System.Threading.Thread.Sleep(10000);
             }
+        }
+
+        private static Task<MethodResponse> Cal_Sal_Clear(MethodRequest methodRequest, object userContext)
+        {
+            sal.CalibrateClear();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+
+        private static Task<MethodResponse> Cal_Sal_High(MethodRequest methodRequest, object userContext)
+        {
+            sal.CalibrateHigh();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+
+        private static Task<MethodResponse> Cal_Sal_Low(MethodRequest methodRequest, object userContext)
+        {
+            sal.CalibrateLow();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+
+        private static Task<MethodResponse> Cal_Sal_Dry(MethodRequest methodRequest, object userContext)
+        {
+            sal.CalibrateDry();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+
+        private static Task<MethodResponse> Cal_PH_High(MethodRequest methodRequest, object userContext)
+        {
+            ph.CalibrateHigh();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+
+        private static Task<MethodResponse> Cal_PH_Mid(MethodRequest methodRequest, object userContext)
+        {
+            ph.CalibrateMid();
+            string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
+            Console.WriteLine("{0}     " + result, DateTime.Now);
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
         }
 
         private static async Task<MethodResponse> IntakeManualMeasurement(MethodRequest methodRequest, object userContext)
@@ -55,13 +125,14 @@ namespace Science
             ManualMeasurement mm = JsonConvert.DeserializeObject<ManualMeasurement>(payload);
             ScienceTelemetry telem = new ScienceTelemetry(TelemetryType.Sience, DateTime.Now, "97765c81-db74-451a-b89d-170ab3464d17", mm.Value, mm.TheType);
 
-            if( telem != null)
+            if (telem != null)
             {
                 string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
                 string s_tem = JsonConvert.SerializeObject(telem);
                 var bytes = Encoding.UTF8.GetBytes(s_tem);
                 var msg = new Message(bytes);
                 await _deviceclient.SendEventAsync(msg);
+                Console.WriteLine("{0}     " + result, DateTime.Now);
                 return await Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
             }
             else

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UWP_App.Models
+﻿namespace UWP_App.Models
 {
     public class OutletVM
     {
@@ -31,6 +25,6 @@ namespace UWP_App.Models
                     _IconImg = "ms-appx:///Assets/Outlet-Icon-Off.png";
             }
         }
-        public string IconImg { get => _IconImg;}
+        public string IconImg { get => _IconImg; }
     }
 }
