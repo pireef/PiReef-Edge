@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=Science Telemetry Collection
+
+[Service]
+ExecStart=/srv/Science/Science
+SyslogIdentifier=Science
+User=pi
+Restart=always
+RestartSec=5
+Environment=DOTNET_ROOT=/home/pi/dotnet-arm32
+
+[Install]
+WantedBy=multi-user.target
+

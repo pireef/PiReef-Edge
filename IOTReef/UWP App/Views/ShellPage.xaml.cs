@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Microsoft.Azure.Devices.Client;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
+using System.Threading.Tasks;
 using UWP_App.Helpers;
+using UWP_App.Models;
+using UWP_App.Modules;
 using UWP_App.Services;
-
 using Windows.Foundation.Metadata;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using UWP_App.Models;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.Azure.Devices.Client;
-using UWP_App.Modules;
-using System.Threading.Tasks;
 
 namespace UWP_App.Views
 {
@@ -42,12 +39,12 @@ namespace UWP_App.Views
 
         public ShellPage()
         {
-            
+
             InitializeComponent();
             HideNavViewBackButton();
             DataContext = this;
             Initialize();
-            
+
             SetupAsync();
         }
 
@@ -62,7 +59,7 @@ namespace UWP_App.Views
         }
 
         private async Task LoadDictionary()
-        {            
+        {
             try
             {
                 outletDict = await OutletStorage.ReadOutletDictionaryAsync("dictionarysettings.txt");

@@ -1,9 +1,6 @@
-﻿using System;
+﻿using FluentScheduler;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentScheduler;
 using UWP_App.Models;
 
 namespace UWP_App.Scheduling
@@ -12,9 +9,9 @@ namespace UWP_App.Scheduling
     {
         public FluentRegistry(Dictionary<string, Outlet> outlets)
         {
-            foreach(var plug in outlets)
+            foreach (var plug in outlets)
             {
-                foreach(var sched in plug.Value.OutletSchedules)
+                foreach (var sched in plug.Value.OutletSchedules)
                 {
                     Schedule(() => new OutletOnOffJob(plug.Value, sched.NewState)).ToRunEvery(1).Days().At(sched.Hour, sched.Min);
                 }

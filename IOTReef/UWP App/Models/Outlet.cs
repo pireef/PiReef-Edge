@@ -1,13 +1,9 @@
-﻿using UWP_App.Models;
+﻿using FluentScheduler;
 using Microsoft.Maker.RemoteWiring;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UWP_App.Scheduling;
-using FluentScheduler;
 
 namespace UWP_App.Models
 {
@@ -86,7 +82,7 @@ namespace UWP_App.Models
                 state = OutletState.OFF;
                 return;
             }
-            if(State == OutletState.OFF)
+            if (State == OutletState.OFF)
             {
                 Arduino.digitalWrite(pinNum, PinState.LOW);
                 state = OutletState.ON;
@@ -119,26 +115,26 @@ namespace UWP_App.Models
                 {
                     var temp = float.Parse(trig.Value);
 
-                    if(trig.DataOperator == TriggerOperator.GREATERTHAN)
+                    if (trig.DataOperator == TriggerOperator.GREATERTHAN)
                     {
                         //checking for high temperature
                         if (data.FTemp > temp)
                         {
                             //trigger condition exists, now go do the work!
-                            TakeTheAction(trig.ActionToTake);                            
+                            TakeTheAction(trig.ActionToTake);
                         }
                     }
-                    else if(trig.DataOperator == TriggerOperator.LESSTHAN)
+                    else if (trig.DataOperator == TriggerOperator.LESSTHAN)
                     {
                         //checking for low temperature
-                        if(data.FTemp < temp)
+                        if (data.FTemp < temp)
                         {
                             //trigger condtion exists, now go do the work!
                             TakeTheAction(trig.ActionToTake);
                         }
                     }
                 }
-                else if(trig.DataToCheck == TriggerData.PH)
+                else if (trig.DataToCheck == TriggerData.PH)
                 {
                     var ph = float.Parse(trig.Value);
                 }
@@ -171,13 +167,13 @@ namespace UWP_App.Models
             TimeSpan end;
 
             //TODO: this assumes only one on, one off per day. 
-            foreach(var sched in OutletSchedules)
+            foreach (var sched in OutletSchedules)
             {
-                if(sched.NewState == OutletState.ON)
+                if (sched.NewState == OutletState.ON)
                 {
-                    start = new TimeSpan(sched.Hour, sched.Min, 0);   
+                    start = new TimeSpan(sched.Hour, sched.Min, 0);
                 }
-                else if(sched.NewState == OutletState.OFF)
+                else if (sched.NewState == OutletState.OFF)
                 {
                     end = new TimeSpan(sched.Hour, sched.Min, 0);
                 }
@@ -194,14 +190,14 @@ namespace UWP_App.Models
                         SetState(OutletState.OFF);
                         DateTime tm = DateTime.Now.AddMinutes(delaytime);
                         //need to check to see if the outlet is going to be off when the delay time job runs.
-                        if(CheckTime(tm, start, end))
+                        if (CheckTime(tm, start, end))
                         {
                             JobManager.AddJob(new OutletOnOffJob(this, OutletState.ON), s => s.ToRunOnceAt(tm));
-                        }                        
+                        }
                     }
                     else
                     {
-                        SetState(OutletState.ON); 
+                        SetState(OutletState.ON);
                     }
                 }
                 else

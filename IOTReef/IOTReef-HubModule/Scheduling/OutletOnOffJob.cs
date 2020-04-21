@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentScheduler;
+﻿using FluentScheduler;
 using IOTReef_HubModule.Models;
-using Microsoft.Maker.RemoteWiring;
 
 namespace IOTReef_HubModule.Scheduling
 {

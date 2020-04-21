@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DoserTelemetry\DoserTelemetry.csproj" />
+    <ProjectReference Include="..\ProcessScienceTelemetry\ProcessScienceTelemetry.csproj" />
     <ProjectReference Include="..\ProcessTelemetry\ProcessTelemetry.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsRoot)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Azure IoT Edge Tools\AzureIoTEdgeProject.Build.targets" />

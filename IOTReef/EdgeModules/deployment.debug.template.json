@@ -76,6 +76,16 @@
               "image": "${MODULEDIR<../DoserTelemetry>.debug}",
               "createOptions": {}
             }
+          },
+          "ProcessScienceTelemetry": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../ProcessScienceTelemetry>.debug}",
+              "createOptions": {}
+            }
           }
         }
       }
@@ -85,7 +95,8 @@
         "schemaVersion": "1.0",
         "routes": {
           "ProcessTelemetryToIoTHub": "FROM /messages/modules/ProcessTelemetry/outputs/* INTO $upstream",
-          "DoserTelemetryToIoTHub": "FROM /messages/modules/DoserTelemetry/outputs/* INTO $upstream"
+          "DoserTelemetryToIoTHub": "FROM /messages/modules/DoserTelemetry/outputs/* INTO $upstream",
+          "ProcessScienceTelemetryToIoTHub": "FROM /messages/modules/ProcessScienceTelemetry/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200

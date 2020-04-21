@@ -55,7 +55,7 @@ namespace UWP_App.Views
             ObservableCollection<OutletVM> theList = new ObservableCollection<OutletVM>();
             Dictionary<string, Outlet> wholeDict = ShellPage.outletDict;
 
-            foreach(var kvp in wholeDict)
+            foreach (var kvp in wholeDict)
             {
                 theList.Add(new OutletVM(kvp.Key, kvp.Value.State));
             }

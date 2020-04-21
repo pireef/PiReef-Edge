@@ -1,0 +1,17 @@
+FROM microsoft/dotnet:2.1-sdk AS build-env
+WORKDIR /app
+
+COPY ./ProcessScienceTelemetry/*.csproj ./
+RUN dotnet restore
+
+COPY . ./
+RUN dotnet publish "ProcessScienceTelemetry/ProcessScienceTelemetry.csproj" -c Release -o out
+
+FROM microsoft/dotnet:2.1-runtime-stretch-slim-arm32v7
+WORKDIR /app
+COPY --from=build-env /app/ProcessScienceTelemetry/out ./
+
+RUN useradd -ms /bin/bash moduleuser
+USER moduleuser
+
+ENTRYPOINT ["dotnet", "ProcessScienceTelemetry.dll"]

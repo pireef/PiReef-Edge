@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FluentScheduler;
+using IOTReefLib.Telemetry;
+using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
+using System;
 using System.Text;
 using System.Threading.Tasks;
-using FluentScheduler;
-using Microsoft.Azure.Devices.Client;
-using IOTReefLib.Telemetry;
-using Newtonsoft.Json;
 
 namespace Doser
 {
@@ -27,11 +25,11 @@ namespace Doser
 
         public void Execute()
         {
-            
+
             EZO_pmp doserpmp = new EZO_pmp(doser, name);
             DosingSettings settings = SettingsHelper.ReadSettings();
             float amt;
-            
+
             if (doser == 0x66)
             {
                 amt = (float)settings.PMP1Amt / 48;
@@ -68,7 +66,7 @@ namespace Doser
                 var msg = new Message(bytes);
                 await dc.SendEventAsync(msg);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

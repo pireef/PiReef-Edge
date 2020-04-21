@@ -1,9 +1,5 @@
 ﻿using FluentScheduler;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UWP_App.Models;
 using UWP_App.Scheduling;
 
@@ -27,7 +23,7 @@ namespace UWP_App.Modules
 
         private void AfterDataConst()
         {
-            foreach(var plug in OutletDict)
+            foreach (var plug in OutletDict)
             {
                 plug.Value.AfterDataConst(Device);
                 //plug.Value.PowerUpRecovery();
@@ -36,7 +32,7 @@ namespace UWP_App.Modules
 
         private void PowerUpRecovery(FluentRegistry reg)
         {
-            foreach(var plug in OutletDict)
+            foreach (var plug in OutletDict)
             {
                 plug.Value.PowerUpRecovery(reg);
             }

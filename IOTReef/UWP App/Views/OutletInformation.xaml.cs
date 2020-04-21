@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UWP_App.Helpers;
 using UWP_App.Models;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -34,10 +24,10 @@ namespace UWP_App.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
+            if (e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
             {
                 string param = (string)e.Parameter;
-                if(ShellPage.outletDict.ContainsKey(param))
+                if (ShellPage.outletDict.ContainsKey(param))
                 {
                     selectedOutlet = ShellPage.outletDict[param];
                 }
@@ -60,7 +50,7 @@ namespace UWP_App.Views
 
         private void GetTriggers()
         {
-            foreach(var trig in selectedOutlet.OutletTriggers)
+            foreach (var trig in selectedOutlet.OutletTriggers)
             {
                 triggerListView.Items.Add(trig.ToString());
             }
@@ -77,7 +67,7 @@ namespace UWP_App.Views
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             currentState.Toggled -= currentState_Toggled;
-            if(bChanges)
+            if (bChanges)
             {
                 OutletStorage.SaveOutletDictionaryAsync(ShellPage.outletDict, "dictionarysettings.txt");
             }
@@ -99,7 +89,7 @@ namespace UWP_App.Views
 
             Trigger newTrigger = new Trigger();
 
-            if(cboData.SelectedIndex == 0)
+            if (cboData.SelectedIndex == 0)
             {
                 newTrigger.DataToCheck = TriggerData.TEMPERATURE;
             }
@@ -108,7 +98,7 @@ namespace UWP_App.Views
                 newTrigger.DataToCheck = TriggerData.PH;
             }
 
-            if(cboOperator.SelectedIndex == 0)
+            if (cboOperator.SelectedIndex == 0)
             {
                 newTrigger.DataOperator = TriggerOperator.GREATERTHAN;
             }
@@ -119,11 +109,11 @@ namespace UWP_App.Views
 
             newTrigger.Value = txtValue.Text;
 
-            if(cboAction.SelectedIndex == 0)
+            if (cboAction.SelectedIndex == 0)
             {
                 newTrigger.ActionToTake = Actions.OUTLETON;
             }
-            else if(cboAction.SelectedIndex == 1)
+            else if (cboAction.SelectedIndex == 1)
             {
                 newTrigger.ActionToTake = Actions.OUTLETOFF;
             }
@@ -173,7 +163,7 @@ namespace UWP_App.Views
             {
                 newSched.NewState = OutletState.ON;
             }
-            else if(cboSchAction.SelectedIndex == 1)
+            else if (cboSchAction.SelectedIndex == 1)
             {
                 newSched.NewState = OutletState.OFF;
             }
@@ -181,7 +171,7 @@ namespace UWP_App.Views
             selectedOutlet.OutletSchedules.Add(newSched);
             bChanges = true;
             ClearControls();
-            
+
         }
 
         private void btnClearSchedule_Click(object sender, RoutedEventArgs e)

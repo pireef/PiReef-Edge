@@ -1,14 +1,9 @@
-﻿using Microsoft.Azure.Devices.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using UWP_App.Helpers;
 using UWP_App.Models;
-using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace UWP_App.Modules
@@ -43,7 +38,7 @@ namespace UWP_App.Modules
         {
             try
             {
-                if(await iothelp.SendData(DataToSend))
+                if (await iothelp.SendData(DataToSend))
                 {
                     //succesfull send, clear the list
                     DataToSend.Clear();
