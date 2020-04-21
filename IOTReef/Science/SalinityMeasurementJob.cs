@@ -4,7 +4,9 @@ using IOTReefLib.Telemetry;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,11 +16,13 @@ namespace Science
     {
         DeviceClient _dc;
         private EZOSal _sal;
+        private List<float> list;
 
-        public SalinityMeasurementJob(DeviceClient dc, EZOSal sal)
+        public SalinityMeasurementJob(DeviceClient dc, EZOSal sal, List<float> sallist)
         {
             _dc = dc;
             _sal = sal;
+            list = sallist;
         }
 
         //salinity circuit
@@ -31,8 +35,13 @@ namespace Science
                 var s = _sal.Response.Substring(1, 5); //I think this works, will need to verify once I get a probe with real values
                                                        //"\u00010.000\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
                 var f = float.Parse(s, CultureInfo.InvariantCulture.NumberFormat);
-                var task = SendTelemetry(f);
-                task.Wait();
+                list.Add(f);
+                if (list.Count >= 5)
+                {
+                    var task = SendTelemetry(list.Average());
+                    list.Clear();
+                    task.Wait();
+                }
             }
             catch (FormatException ex)
             {

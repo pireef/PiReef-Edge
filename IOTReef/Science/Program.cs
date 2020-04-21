@@ -4,6 +4,7 @@ using IOTReefLib.Telemetry;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -18,6 +19,9 @@ namespace Science
         static EZOPH ph;
         static EZOrtd tmp;
         static EZOSal sal;
+        static List<float> phlist;
+        static List<float> sallist;
+        static List<float> tmplist;
 
         static void Main(string[] args)
         {
@@ -39,16 +43,9 @@ namespace Science
             ph = new EZOPH();
             tmp = new EZOrtd();
             sal = new EZOSal();
-            //sal.FactoryReset();
-            //System.Threading.Thread.Sleep(5000);
-            //sal.OutputEC(true);
-            //System.Threading.Thread.Sleep(500);
-            //sal.OutputSal(true);
-            //System.Threading.Thread.Sleep(500);
-            //sal.OutputSG(true);
-            //System.Threading.Thread.Sleep(500);
-            //sal.OutputTDS(true);
-            //System.Threading.Thread.Sleep(500);
+            phlist = new List<float>();
+            sallist = new List<float>();
+            tmplist = new List<float>();
 
             //set the direct method handlers here
             _deviceclient.SetMethodHandlerAsync("IntakeManualMeasurement", IntakeManualMeasurement, null).Wait();
@@ -63,7 +60,7 @@ namespace Science
             InstallCACert();
 
             Console.WriteLine("{0}     Setting Schedule...", DateTime.Now);
-            JobManager.Initialize(new ScienceRegistry(_deviceclient, ph, tmp, sal));
+            JobManager.Initialize(new ScienceRegistry(_deviceclient, ph, tmp, sal, tmplist, phlist, sallist));
 
             while (true)
             {

@@ -1,0 +1,13 @@
+﻿[Unit]
+Description=Doser
+
+[Service]
+ExecStart=/srv/Doser/Doser
+SyslogIdentifier=Doser
+User=pi
+Restart=always
+RestartSec=5
+Environment=DOTNET_ROOT=/home/pi/dotnet
+
+[Install]
+WantedBy=multi-user.target

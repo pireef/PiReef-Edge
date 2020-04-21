@@ -4,7 +4,9 @@ using IOTReefLib.Telemetry;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,11 +16,13 @@ namespace Science
     {
         private DeviceClient _dc;
         private EZOrtd tmp;
+        private List<float> list;
 
-        public TempMeasurementJob(DeviceClient dc, EZOrtd tmp)
+        public TempMeasurementJob(DeviceClient dc, EZOrtd tmp, List<float> tmplist)
         {
             _dc = dc;
             this.tmp = tmp;
+            list = tmplist;
         }
 
         public void Execute()
@@ -28,8 +32,13 @@ namespace Science
             var s = tmp.Response.Substring(1, 6);
             var f = float.Parse(s, CultureInfo.InvariantCulture.NumberFormat);
             Console.WriteLine("{0}     Temperature:{1}", DateTime.Now, f);
-            var task = SendTelemetry(f);
-            task.Wait();
+            list.Add(f);
+            if (list.Count >= 5)
+            {
+                var task = SendTelemetry(list.Average());
+                list.Clear();
+                task.Wait();
+            }
         }
 
         private async Task SendTelemetry(float amt)
