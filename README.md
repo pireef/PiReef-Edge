@@ -4,6 +4,8 @@ The goal of this project is to make a full IOT based aquarium monitor / controll
 
 This project is built with Windows IOT Core with a full Azure back-end.  
 
+As you look through the code you can tell it's several years old.  I also haven't really worked on it for a long time.  You'll also see some less than professional merge names because I never really intended to make this public, it was more for me.  I have since decided to get back into technology and I want to have my github full of the various projects I have done.  
+
 
 # Getting Started
 Current Required Hardware:
